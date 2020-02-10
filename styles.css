@@ -1,0 +1,89 @@
+:root{
+  --primary-color: var(--user-primary, #000B1C);
+  --secondary-color: var(--user-secondary, #888);
+  --card-color: var(--user-card, #F8F9FA);
+  --bg-color: var(--user-bg);
+  --black-w-opacity: rgba(0,0,0,0.4);
+}
+
+body{
+  margin: 2em;
+  box-sizing: border-box;
+  font-family: sans-serif;
+  background-color: var(--bg-color);
+}
+
+#dataList{
+  display: flex;
+  flex-wrap: wrap;
+  margin: auto -.5em;
+}
+
+button {
+  color: var(--card-color);
+  background-color: var(--primary-color);
+}
+
+button.active{
+    color: var(--primary-color);
+    background-color: var(--card-color);
+}
+
+h1, .name{
+  color: var(--primary-color);
+}
+
+#dataList .listItem {
+  padding: 1em;
+  margin: .5em;
+  background-color: var(--card-color);
+}
+
+#dataList .listItem:hover{
+  --card-color: #102a44;
+  --primary-color: #F8F9FA;
+  cursor: pointer;
+}
+
+.school{
+  font-size: small;
+  color: var(--secondary-color);
+}
+
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: var(--black-w-opacity, rgb(0,0,0)); /* var + fallback color */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: var(--card-color);
+  margin: auto;
+  padding: 20px;
+  border: 1px solid var(--secondary-color);
+  width: 80%;
+}
+
+/* The Close Button */
+.close {
+  color: var(--secondary-color);
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: var(--primary-color);
+  text-decoration: none;
+  cursor: pointer;
+}
