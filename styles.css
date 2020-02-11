@@ -1,32 +1,43 @@
 :root{
-  --primary-color: var(--user-primary, #000B1C);
-  --secondary-color: var(--user-secondary, #888);
-  --card-color: var(--user-card, #F8F9FA);
-  --bg-color: var(--user-bg);
+  --primary-color: #2d004d;
+  --secondary-color: #888;
+  --card-color: #F8F9FA;
   --black-w-opacity: rgba(0,0,0,0.4);
+}
+
+[data-house="Hufflepuff"] {
+  --card-color: #e3a000;
+  --secondary-color: #282828;
+}
+
+[data-house="Gryffindor"] {
+  --card-color: #9c1203;
+  --primary-color: #F8F9FA;
+  --secondary-color: #e3a000;
+}
+
+[data-house="Ravenclaw"] {
+  --card-color: #00165e;
+  --primary-color: #F8F9FA;
+  --secondary-color: #C09364;
+}
+
+[data-house="Slytherin"] {
+  --card-color: #033807;
+  --primary-color: #F8F9FA;
+  --secondary-color: #CDCDCD;
 }
 
 body{
   margin: 2em;
   box-sizing: border-box;
   font-family: sans-serif;
-  background-color: var(--bg-color);
 }
 
 #dataList{
   display: flex;
   flex-wrap: wrap;
   margin: auto -.5em;
-}
-
-button {
-  color: var(--card-color);
-  background-color: var(--primary-color);
-}
-
-button.active{
-    color: var(--primary-color);
-    background-color: var(--card-color);
 }
 
 h1, .name{
@@ -40,12 +51,12 @@ h1, .name{
 }
 
 #dataList .listItem:hover{
-  --card-color: #102a44;
+  --card-color: #2d004d;
   --primary-color: #F8F9FA;
   cursor: pointer;
 }
 
-.school{
+.house{
   font-size: small;
   color: var(--secondary-color);
 }

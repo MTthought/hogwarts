@@ -9,14 +9,12 @@
 </head>
 <body>
   <h1>Hogwarts 1991</h1>
-  <button id="theme1" class="active">Light theme</button>
-  <button id="theme2">Dark theme</button>
   <div id="dataList"></div>
   
   <template class="templates">
     <div class="listItem">
         <div class="name"></div>
-        <div class="school"></div>
+        <div class="house"></div>
     </div>
   </template>
 
@@ -24,8 +22,9 @@
   <div id="myModal" class="modal">
 
     <!-- Modal content -->
-    <div class="modal-content">
+    <div class="modal-content" data-house="">
       <span class="close">&times;</span>
+      <img src="" alt="" height="40" width="40">
     </div>
 
   </div>

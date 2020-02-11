@@ -1,41 +1,4 @@
-window.addEventListener("DOMContentLoaded", start);
-
-let theme1btn = document.querySelector("#theme1");
-let theme2btn = document.querySelector("#theme2");
-let stylelem = document.documentElement.style;
-
-function start(){
-    theme1btn.addEventListener("click", theme1)
-    theme2btn.addEventListener("click", theme2)
-    getData();
-}
-
-function theme1(){
-    theme2btn.classList.remove("active");
-    theme1btn.classList.add("active");
-    setTheme();
-}
-
-function theme2(){
-    theme1btn.classList.remove("active");
-    theme2btn.classList.add("active");
-    setTheme();
-}
-
-function setTheme(){
-    const theme2active = theme2btn.classList.contains("active");
-    if(theme2active == true){
-        stylelem.setProperty('--user-primary', '#F8F9FA');
-        stylelem.setProperty('--user-secondary', '#aaaaaa');
-        stylelem.setProperty('--user-card', '#000B1C');
-        stylelem.setProperty('--user-bg', '#001021');
-    }else{
-        stylelem.removeProperty('--user-primary');
-        stylelem.removeProperty('--user-secondary');
-        stylelem.removeProperty('--user-card');
-        stylelem.removeProperty('--user-bg');
-    }
-}
+window.addEventListener("DOMContentLoaded", getData);
 
 async function getData(){
     let response = await fetch("students1991.json");
@@ -51,7 +14,7 @@ function showStudents() {
 
     students.forEach(student => {
         const clone = studentTemplate.cloneNode(true).content;
-        clone.querySelector(".school").textContent = student.house;
+        clone.querySelector(".house").textContent = student.house;
         clone.querySelector(".name").textContent = student.fullname;
         dataList.appendChild(clone);
     })
@@ -68,6 +31,10 @@ var content = document.getElementsByClassName("modal-content")[0];
 
 function popup(){
     const clone = this.cloneNode(true);
+    const houseName = clone.querySelector(".house").textContent;
+    content.dataset.house = houseName;
+    document.querySelector("#myModal > div > img").src = "img/" + houseName + ".svg";
+    document.querySelector("#myModal > div > img").alt = houseName + "-crest";
     content.appendChild(clone);
     modal.style.display = "block";
 }
