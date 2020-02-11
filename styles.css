@@ -34,6 +34,11 @@ body{
   font-family: sans-serif;
 }
 
+img {
+  padding-right: 20px;
+  height: 5rem;
+}
+
 #dataList{
   display: flex;
   flex-wrap: wrap;
@@ -82,6 +87,11 @@ h1, .name{
   padding: 20px;
   border: 1px solid var(--secondary-color);
   width: 80%;
+}
+
+#student-content {
+  display: flex;
+  flex-wrap: wrap;
 }
 
 /* The Close Button */

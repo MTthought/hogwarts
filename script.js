@@ -1,14 +1,15 @@
+"use strict";
 window.addEventListener("DOMContentLoaded", getData);
 
 async function getData(){
-    let response = await fetch("students1991.json");
-    students = await response.json();
-    showStudents();
+    const response = await fetch("students1991.json");
+    const students = await response.json();
+    showStudents(students);
 }
 
-function showStudents() {
-    let studentTemplate = document.querySelector(".templates");
-    let dataList = document.querySelector("#dataList");
+function showStudents(students) {
+    const studentTemplate = document.querySelector(".templates");
+    const dataList = document.querySelector("#dataList");
 
     dataList.innerHTML = "";
 
@@ -19,22 +20,23 @@ function showStudents() {
         dataList.appendChild(clone);
     })
 
-    let items = document.querySelectorAll(".listItem");
+    const items = document.querySelectorAll(".listItem");
     items.forEach(item => {
         item.addEventListener("click", popup);
     })
 }
 
-var modal = document.getElementById("myModal");
-var span = document.getElementsByClassName("close")[0];
-var content = document.getElementsByClassName("modal-content")[0];
+const modal = document.getElementById("myModal");
+const span = document.getElementsByClassName("close")[0];
+const modalInner = document.getElementsByClassName("modal-content")[0];
+const content = document.getElementById("student-content");
 
 function popup(){
     const clone = this.cloneNode(true);
     const houseName = clone.querySelector(".house").textContent;
-    content.dataset.house = houseName;
-    document.querySelector("#myModal > div > img").src = "img/" + houseName + ".svg";
-    document.querySelector("#myModal > div > img").alt = houseName + "-crest";
+    modalInner.dataset.house = houseName;
+    document.querySelector("#student-content > img").src = "img/" + houseName + ".svg";
+    document.querySelector("#student-content > img").alt = houseName + "-crest";
     content.appendChild(clone);
     modal.style.display = "block";
 }
