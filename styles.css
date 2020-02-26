@@ -39,9 +39,12 @@ img {
   height: 5rem;
 }
 
-#dataList{
+.container{
   display: flex;
   flex-wrap: wrap;
+}
+
+#dataList{
   margin: auto -.5em;
 }
 
@@ -66,6 +69,10 @@ h1, .name{
   color: var(--secondary-color);
 }
 
+.optional{
+  display: none;
+}
+
 /* The Modal (background) */
 .modal {
   display: none; /* Hidden by default */
@@ -87,11 +94,6 @@ h1, .name{
   padding: 20px;
   border: 1px solid var(--secondary-color);
   width: 80%;
-}
-
-#student-content {
-  display: flex;
-  flex-wrap: wrap;
 }
 
 /* The Close Button */
