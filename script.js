@@ -16,7 +16,8 @@ const HTML = {};
 
 function init(){
     HTML.modalContent = document.querySelector(".modal-content");
-    HTML.modalImg = document.querySelector(".container > img");
+    HTML.pic = document.querySelector(".container > div > img");
+    HTML.crest = document.querySelector(".container > img");
     HTML.modalFirstName = document.querySelector("#firstName");
     HTML.modalLastName = document.querySelector("#lastName");
     HTML.modalHouse = document.querySelector("#house");
@@ -45,10 +46,10 @@ function clearSpace(name){
     }}
 
 function rightCase(name){
-    if(name.indexOf("-") === -1){
-        return name.substring(0,1).toUpperCase() + name.substring(1, name.length).toLowerCase();
-    }else{
+    if(hasHyphen(name)){
         return name;
+    }else{
+        return name.substring(0,1).toUpperCase() + name.substring(1, name.length).toLowerCase();
     }
 }
 
@@ -57,6 +58,14 @@ function hasSpace(name){
         return true;
     }else{
         return false;
+    }
+}
+
+function hasHyphen(name){
+    if(name.indexOf("-") === -1){
+        return false;
+    }else{
+        return true;
     }
 }
 
@@ -90,7 +99,24 @@ function cleanUpData(students){
         //house
         let house = clearSpace(stud.house);
         clone.house = rightCase(house);
-        clone.pic = `img/${clone.house}.svg`;
+
+        //picture
+        if(lastName !== undefined){
+            let lowerSurname;
+            if(hasHyphen(lastName)){
+                lowerSurname = lastName.substring(lastName.indexOf("-")+1, lastName.length);
+            }else{
+                lowerSurname = lastName;
+            }
+
+            let nameLetter;
+            if(lastName === "Patil"){
+                nameLetter = firstName;
+            }else{
+                nameLetter = firstName.substring(0,1);
+            }
+            clone.pic = `img/${lowerSurname}_${nameLetter}.png`.toLowerCase();
+        }
 
         //console.log(clone);
         allStudents.push(clone);
@@ -118,6 +144,7 @@ function showStudents() {
     })
 }
 
+//modal taken from https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_modal
 const modal = document.getElementById("myModal");
 const span = document.getElementsByClassName("close")[0];
 
@@ -125,8 +152,10 @@ function popup(){
     const studentData = allStudents.find( ({ firstName }) => firstName === this.dataset.id );
     //console.log(studentData);
     HTML.modalContent.dataset.house = studentData.house;
-    HTML.modalImg.src = studentData.pic;
-    HTML.modalImg.alt = `${studentData.house}-crest`;
+    HTML.pic.src = studentData.pic;
+    HTML.pic.alt = `${studentData.firstName}-picture`;
+    HTML.crest.src = `img/${studentData.house}.svg`;
+    HTML.crest.alt = `${studentData.house}-crest`;
     HTML.modalFirstName.textContent = studentData.firstName;
     HTML.modalLastName.textContent = studentData.lastName;
     HTML.modalHouse.textContent = studentData.house;
