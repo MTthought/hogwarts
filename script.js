@@ -1,18 +1,21 @@
 "use strict";
 window.addEventListener("DOMContentLoaded", init);
 
+let allStudents = [];
+const HTML = {};
+const settings = {
+    filter: null,
+    sortBy: null
+}
+//the prototype for all students
 const Student = {
     firstName: "",
     lastName: "-unknown-",
     middleName: null,
     nickName: null,
-    pic: "",
+    pic: "img/blank-profile.png",
     house: ""
 }
-
-const allStudents = [];
-
-const HTML = {};
 
 function init(){
     HTML.modalContent = document.querySelector(".modal-content");
@@ -23,6 +26,9 @@ function init(){
     HTML.modalHouse = document.querySelector("#house");
     HTML.modalMiddleName = document.querySelector("#middleName");
     HTML.modalNickName = document.querySelector("#nickName");
+    HTML.btns = document.querySelectorAll("button");
+    HTML.btns.forEach(btn => btn.addEventListener("click", setSettings));
+
     getData();
 }
 
@@ -32,6 +38,7 @@ async function getData(){
     cleanUpData(students)
 }
 
+//clean strings
 function clearSpace(name){
     if(name.indexOf(" ") === 0){
         if(name.lastIndexOf(" ") === name.length-1){
@@ -72,7 +79,6 @@ function hasHyphen(name){
 function cleanUpData(students){
     students.forEach(stud => {
         const clone = Object.create ( Student );
-        //full name
         let fullName = clearSpace(stud.fullname);
         //first and last name
         let firstName;
@@ -99,7 +105,6 @@ function cleanUpData(students){
         //house
         let house = clearSpace(stud.house);
         clone.house = rightCase(house);
-
         //picture
         if(lastName !== undefined){
             let lowerSurname;
@@ -117,20 +122,75 @@ function cleanUpData(students){
             }
             clone.pic = `img/${lowerSurname}_${nameLetter}.png`.toLowerCase();
         }
-
         //console.log(clone);
         allStudents.push(clone);
     })
-    showStudents();
+    showStudents(allStudents);
 }
 
-function showStudents() {
+function setSettings(){
+    if(this.dataset.filter){
+        settings.filter = this.dataset.filter;
+        filterHouse();
+    }else if(this.dataset.sort){
+        settings.sortBy = this.dataset.sort;
+        sortName();
+    }
+}
+
+//filtering
+function filterHouse(){
+    if(settings.filter === "*"){
+        showStudents(allStudents);
+    }else{
+        const onlyHouse = allStudents.filter(student => {
+            if(student.house.toLowerCase() === settings.filter.toLowerCase()){
+                return true;
+            }else{
+                return false;
+            }
+        });
+        showStudents(onlyHouse);
+    }
+}
+
+//sorting
+function compareFirstName(a,b){
+    if(a.firstName < b.firstName){
+        return -1;
+    }else{
+        return 1;
+    }
+}
+
+function compareLastName(a,b){
+    if(a.lastName < b.lastName){
+        return -1;
+    }else{
+        return 1;
+    }
+}
+
+function sortName(){
+    if(settings.sortBy === "firstName"){
+        allStudents.sort(compareFirstName);
+    }else if(settings.sortBy === "lastName"){
+        allStudents.sort(compareLastName);
+    }
+    if(settings.filter){
+        filterHouse();
+    }else{
+        showStudents(allStudents);
+    }
+}
+
+function showStudents(students) {
     const studentTemplate = document.querySelector(".templates");
     const dataList = document.querySelector("#dataList");
 
     dataList.innerHTML = "";
 
-    allStudents.forEach(student => {
+    students.forEach(student => {
         const clone = studentTemplate.cloneNode(true).content;
         clone.querySelector(".house").textContent = student.house;
         clone.querySelector(".name").textContent = `${student.firstName} ${student.lastName}`;
@@ -185,4 +245,16 @@ window.onclick = function(event) {
 if (event.target == modal) {
     modal.style.display = "none";
 }
+}
+
+//hacking the system
+function hackTheSystem(){
+    //console.log("hacked!");
+    const mySelf = Object.create( Student );
+    mySelf.firstName = "Adam";
+    mySelf.house = "Gryffindor";
+    //create cannotBeExpelled function
+    mySelf.cannotBeExpelled = true;
+    allStudents.push( mySelf );
+    showStudents();
 }
