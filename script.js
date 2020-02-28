@@ -26,8 +26,9 @@ function init(){
     HTML.modalHouse = document.querySelector("#house");
     HTML.modalMiddleName = document.querySelector("#middleName");
     HTML.modalNickName = document.querySelector("#nickName");
-    HTML.btns = document.querySelectorAll("button");
-    HTML.btns.forEach(btn => btn.addEventListener("click", setSettings));
+    HTML.unsorted = document.querySelector("#nameSorting > option:nth-child(1)");
+    HTML.options = document.querySelectorAll("select");
+    HTML.options.forEach(option => option.addEventListener("change", setSettings));
 
     getData();
 }
@@ -38,7 +39,7 @@ async function getData(){
     cleanUpData(students)
 }
 
-//clean strings
+//string cleaner
 function clearSpace(name){
     if(name.indexOf(" ") === 0){
         if(name.lastIndexOf(" ") === name.length-1){
@@ -129,11 +130,12 @@ function cleanUpData(students){
 }
 
 function setSettings(){
-    if(this.dataset.filter){
-        settings.filter = this.dataset.filter;
+    if(this.dataset.action === "filter"){
+        settings.filter = this.value;
         filterHouse();
-    }else if(this.dataset.sort){
-        settings.sortBy = this.dataset.sort;
+    }else if(this.dataset.action === "sort"){
+        HTML.unsorted.setAttribute("disabled", true);
+        settings.sortBy = this.value;
         sortName();
     }
 }

@@ -39,6 +39,11 @@ img {
   height: 5rem;
 }
 
+label {
+  color: var(--primary-color);
+  font-size: small;
+}
+
 .container{
   display: flex;
   flex-wrap: wrap;
