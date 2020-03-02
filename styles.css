@@ -34,8 +34,8 @@ body{
   font-family: sans-serif;
 }
 
-img {
-  padding-right: 20px;
+img.crest {
+  padding: 12px 32px 12px 12px;
   height: 5rem;
 }
 

@@ -2,6 +2,7 @@
 window.addEventListener("DOMContentLoaded", init);
 
 let allStudents = [];
+let expelledStudents = [];
 const HTML = {};
 const settings = {
     filter: null,
@@ -29,6 +30,8 @@ function init(){
     HTML.unsorted = document.querySelector("#nameSorting > option:nth-child(1)");
     HTML.options = document.querySelectorAll("select");
     HTML.options.forEach(option => option.addEventListener("change", setSettings));
+    HTML.expelBtn = document.querySelector("button");
+    HTML.expelBtn.addEventListener("click", expel);
 
     getData();
 }
@@ -206,12 +209,17 @@ function showStudents(students) {
     })
 }
 
+function getSingleStudent(id){
+    return allStudents.find( ({ firstName }) => firstName === id );
+}
+
 //modal taken from https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_modal
 const modal = document.getElementById("myModal");
 const span = document.getElementsByClassName("close")[0];
 
 function popup(){
-    const studentData = allStudents.find( ({ firstName }) => firstName === this.dataset.id );
+    const studentData = getSingleStudent(this.dataset.id);
+    //const studentData = allStudents.find( ({ firstName }) => firstName === this.dataset.id );
     //console.log(studentData);
     HTML.modalContent.dataset.house = studentData.house;
     HTML.pic.src = studentData.pic;
@@ -221,6 +229,7 @@ function popup(){
     HTML.modalFirstName.textContent = studentData.firstName;
     HTML.modalLastName.textContent = studentData.lastName;
     HTML.modalHouse.textContent = studentData.house;
+    HTML.expelBtn.dataset.id = studentData.firstName;
 
     if(studentData.middleName){
         HTML.modalMiddleName.parentElement.classList.remove("optional");
@@ -247,6 +256,14 @@ window.onclick = function(event) {
 if (event.target == modal) {
     modal.style.display = "none";
 }
+}
+
+function expel(){
+    //console.log(`Remove ${this.dataset.id}`);
+    const studentData = getSingleStudent(this.dataset.id);
+    expelledStudents.push(studentData);
+    allStudents.splice(allStudents.indexOf(studentData), 1);
+    showStudents(allStudents);
 }
 
 //hacking the system
