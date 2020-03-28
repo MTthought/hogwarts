@@ -27,6 +27,8 @@
   </select>
   
   <div id="dataList" class="container"></div>
+  <h2 class="optional mt">Expelled students</h2>
+  <div id="expelledList" class="container"></div>
   
   <template class="templates">
     <div class="listItem" data-id="">
@@ -43,7 +45,7 @@
       <span class="close">&times;</span>
       <div class="container">
         <img src="" alt="" class="crest">
-        <div>
+        <div class="col">
             <img src="" alt="">
             <div><span class="house">First name: </span><span class="name" id="firstName"></span></div>
             <div><span class="house">Middle name: </span><span class="name" id="middleName"></span></div>
@@ -51,8 +53,9 @@
             <div><span class="house">Nick name: </span><span class="name" id="nickName"></span></div>
             <div><span class="house">House: </span><span class="name" id="house"></span></div>
         </div>
-        <div>
-          <button data-id="">Expel</button>
+        <div class="col">
+          <h3 class="name optional">Expelled</h3>
+          <button data-id="" class="btn">Expel</button>
         </div>
       </div>
     </div>

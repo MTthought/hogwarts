@@ -5,7 +5,7 @@ let allStudents = [];
 let expelledStudents = [];
 const HTML = {};
 const settings = {
-    filter: null,
+    filter: "*",
     sortBy: null
 }
 //the prototype for all students
@@ -19,6 +19,9 @@ const Student = {
 }
 
 function init(){
+    HTML.studentTemplate = document.querySelector(".templates");
+    HTML.dataList = document.querySelector("#dataList");
+    HTML.expelledList = document.querySelector("#expelledList");
     HTML.modalContent = document.querySelector(".modal-content");
     HTML.pic = document.querySelector(".container > div > img");
     HTML.crest = document.querySelector(".container > img");
@@ -27,12 +30,14 @@ function init(){
     HTML.modalHouse = document.querySelector("#house");
     HTML.modalMiddleName = document.querySelector("#middleName");
     HTML.modalNickName = document.querySelector("#nickName");
+    HTML.modalexpelHeading = HTML.modalContent.querySelector("h3");
     HTML.unsorted = document.querySelector("#nameSorting > option:nth-child(1)");
     HTML.options = document.querySelectorAll("select");
-    HTML.options.forEach(option => option.addEventListener("change", setSettings));
     HTML.expelBtn = document.querySelector("button");
-    HTML.expelBtn.addEventListener("click", expel);
+    HTML.expelHeading = document.querySelector("body > h2");
 
+    HTML.options.forEach(option => option.addEventListener("change", setSettings));
+    HTML.expelBtn.addEventListener("click", expel);
     getData();
 }
 
@@ -129,7 +134,7 @@ function cleanUpData(students){
         //console.log(clone);
         allStudents.push(clone);
     })
-    showStudents(allStudents);
+    showStudents(allStudents, HTML.dataList);
 }
 
 function setSettings(){
@@ -144,18 +149,32 @@ function setSettings(){
 }
 
 //filtering
+function setHouseFilter(a){
+    const onlyHouse = a.filter(student => {
+        if(student.house.toLowerCase() === settings.filter.toLowerCase()){
+            return true;
+        }else{
+            return false;
+        }
+    });
+    return onlyHouse;
+}
+
 function filterHouse(){
     if(settings.filter === "*"){
-        showStudents(allStudents);
+        showStudents(allStudents, HTML.dataList);
+        if(expelledStudents.length !== 0){
+            showStudents(expelledStudents, HTML.expelledList);
+        }
     }else{
-        const onlyHouse = allStudents.filter(student => {
-            if(student.house.toLowerCase() === settings.filter.toLowerCase()){
-                return true;
-            }else{
-                return false;
-            }
-        });
-        showStudents(onlyHouse);
+        showStudents(setHouseFilter(allStudents), HTML.dataList);
+        showStudents(setHouseFilter(expelledStudents), HTML.expelledList);
+
+        if(setHouseFilter(expelledStudents).length !== 0){
+            HTML.expelHeading.classList.remove("optional");
+        }else{
+            HTML.expelHeading.classList.add("optional");
+        }
     }
 }
 
@@ -185,22 +204,19 @@ function sortName(){
     if(settings.filter){
         filterHouse();
     }else{
-        showStudents(allStudents);
+        showStudents(allStudents, HTML.dataList);
     }
 }
 
-function showStudents(students) {
-    const studentTemplate = document.querySelector(".templates");
-    const dataList = document.querySelector("#dataList");
-
-    dataList.innerHTML = "";
+function showStudents(students, inner) {
+    inner.innerHTML = "";
 
     students.forEach(student => {
-        const clone = studentTemplate.cloneNode(true).content;
+        const clone = HTML.studentTemplate.cloneNode(true).content;
         clone.querySelector(".house").textContent = student.house;
         clone.querySelector(".name").textContent = `${student.firstName} ${student.lastName}`;
         clone.querySelector(".listItem").dataset.id = student.firstName;
-        dataList.appendChild(clone);
+        inner.appendChild(clone);
     })
 
     const items = document.querySelectorAll(".listItem");
@@ -210,7 +226,11 @@ function showStudents(students) {
 }
 
 function getSingleStudent(id){
-    return allStudents.find( ({ firstName }) => firstName === id );
+    if(allStudents.some(e => e.firstName === id )){
+        return allStudents.find( ({ firstName }) => firstName === id );
+    }else{
+        return expelledStudents.find( ({ firstName }) => firstName === id );
+    }
 }
 
 //modal taken from https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_modal
@@ -245,6 +265,13 @@ function popup(){
         HTML.modalNickName.parentElement.classList.add("optional");
     }
 
+    if(expelledStudents.some(e => e.firstName === studentData.firstName)){
+        modalExpelStyle();
+    }else{
+        HTML.expelBtn.classList.remove("optional");
+        HTML.modalexpelHeading.classList.add("optional");
+    }
+    // to do: should add classList to keep separation of concerns
     modal.style.display = "block";
 }
 
@@ -258,12 +285,19 @@ if (event.target == modal) {
 }
 }
 
+function modalExpelStyle(){
+    HTML.expelBtn.classList.add("optional");
+    HTML.modalexpelHeading.classList.remove("optional");
+}
+
 function expel(){
     //console.log(`Remove ${this.dataset.id}`);
     const studentData = getSingleStudent(this.dataset.id);
     expelledStudents.push(studentData);
     allStudents.splice(allStudents.indexOf(studentData), 1);
-    showStudents(allStudents);
+    modalExpelStyle();
+    HTML.expelHeading.classList.remove("optional");
+    filterHouse();
 }
 
 //hacking the system

@@ -34,9 +34,13 @@ body{
   font-family: sans-serif;
 }
 
+.col{
+  padding: 0 1em;
+}
+
 img.crest {
-  padding: 12px 32px 12px 12px;
-  height: 5rem;
+  padding: 1em 2em 1em 1em;
+  height: 5em;
 }
 
 label {
@@ -49,21 +53,21 @@ label {
   flex-wrap: wrap;
 }
 
-#dataList{
+#dataList, #expelledList{
   margin: auto -.5em;
 }
 
-h1, .name{
+h1, h2, .name{
   color: var(--primary-color);
 }
 
-#dataList .listItem {
+.listItem {
   padding: 1em;
   margin: .5em;
   background-color: var(--card-color);
 }
 
-#dataList .listItem:hover{
+.listItem:hover{
   --card-color: #2d004d;
   --primary-color: #F8F9FA;
   cursor: pointer;
@@ -76,6 +80,10 @@ h1, .name{
 
 .optional{
   display: none;
+}
+
+.mt{
+  margin-top: 2em;
 }
 
 /* The Modal (background) */
@@ -108,10 +116,21 @@ h1, .name{
   font-size: 28px;
   font-weight: bold;
 }
-
 .close:hover,
 .close:focus {
   color: var(--primary-color);
   text-decoration: none;
   cursor: pointer;
+}
+
+.btn{
+  padding: 1em;
+  color: var(--card-color);
+  border: 1px solid var(--secondary-color);
+  border-radius: 5px;
+  background-image: linear-gradient(to bottom, var(--primary-color) 0%, var(--secondary-color) 100%);
+  cursor: pointer;
+}
+.btn:hover{
+  background-image: linear-gradient(to bottom, var(--secondary-color) 0%, var(--primary-color) 100%);
 }
