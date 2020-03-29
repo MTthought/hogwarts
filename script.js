@@ -15,7 +15,8 @@ const Student = {
     middleName: null,
     nickName: null,
     pic: "img/blank-profile.png",
-    house: ""
+    house: "",
+    cannotBeExpelled: false
 }
 
 function init(){
@@ -134,7 +135,7 @@ function cleanUpData(students){
         //console.log(clone);
         allStudents.push(clone);
     })
-    showStudents(allStudents, HTML.dataList);
+    filterHouse();
 }
 
 function setSettings(){
@@ -171,7 +172,7 @@ function filterHouse(){
         showStudents(setHouseFilter(expelledStudents), HTML.expelledList);
 
         if(setHouseFilter(expelledStudents).length !== 0){
-            HTML.expelHeading.classList.remove("optional");
+            listExpelStyle();
         }else{
             HTML.expelHeading.classList.add("optional");
         }
@@ -201,11 +202,7 @@ function sortName(){
     }else if(settings.sortBy === "lastName"){
         allStudents.sort(compareLastName);
     }
-    if(settings.filter){
-        filterHouse();
-    }else{
-        showStudents(allStudents, HTML.dataList);
-    }
+    filterHouse();
 }
 
 function showStudents(students, inner) {
@@ -290,24 +287,28 @@ function modalExpelStyle(){
     HTML.modalexpelHeading.classList.remove("optional");
 }
 
-function expel(){
-    //console.log(`Remove ${this.dataset.id}`);
-    const studentData = getSingleStudent(this.dataset.id);
-    expelledStudents.push(studentData);
-    allStudents.splice(allStudents.indexOf(studentData), 1);
-    modalExpelStyle();
+function listExpelStyle(){
     HTML.expelHeading.classList.remove("optional");
-    filterHouse();
+}
+
+function expel(){
+    const studentData = getSingleStudent(this.dataset.id);
+    if(studentData.cannotBeExpelled === false){
+        //console.log(`Remove ${this.dataset.id}`);
+        expelledStudents.push(studentData);
+        allStudents.splice(allStudents.indexOf(studentData), 1);
+        modalExpelStyle();
+        listExpelStyle();
+        filterHouse();
+    }
 }
 
 //hacking the system
 function hackTheSystem(){
-    //console.log("hacked!");
     const mySelf = Object.create( Student );
-    mySelf.firstName = "Adam";
+    mySelf.firstName = "MTthought";
     mySelf.house = "Gryffindor";
-    //create cannotBeExpelled function
     mySelf.cannotBeExpelled = true;
     allStudents.push( mySelf );
-    showStudents();
+    filterHouse();
 }
