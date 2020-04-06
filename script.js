@@ -6,9 +6,10 @@ let expelledStudents = [];
 const HTML = {};
 const settings = {
     filter: "*",
-    sortBy: null
+    sortBy: null,
+    hackedSystem: false
 }
-//the prototype for all students
+// the prototype for all students
 const Student = {
     firstName: "",
     lastName: "-unknown-",
@@ -23,6 +24,7 @@ function init(){
     HTML.studentTemplate = document.querySelector(".templates");
     HTML.dataList = document.querySelector("#dataList");
     HTML.expelledList = document.querySelector("#expelledList");
+    HTML.modal = document.getElementById("myModal");
     HTML.modalContent = document.querySelector(".modal-content");
     HTML.pic = document.querySelector(".container > div > img");
     HTML.crest = document.querySelector(".container > img");
@@ -48,7 +50,7 @@ async function getData(){
     cleanUpData(students)
 }
 
-//string cleaner
+// string cleaner
 function clearSpace(name){
     if(name.indexOf(" ") === 0){
         if(name.lastIndexOf(" ") === name.length-1){
@@ -90,7 +92,7 @@ function cleanUpData(students){
     students.forEach(stud => {
         const clone = Object.create ( Student );
         let fullName = clearSpace(stud.fullname);
-        //first and last name
+        // first and last name
         let firstName;
         let lastName;
         if(hasSpace(fullName)){
@@ -101,7 +103,7 @@ function cleanUpData(students){
             firstName = fullName;
         }
         clone.firstName = rightCase(firstName);
-        //middle and nick name
+        // middle and nick name
         let halfName = fullName.substring(fullName.indexOf(" ")+1, fullName.length);
         if(hasSpace(halfName)){
             let middleName = halfName.substring(0, halfName.lastIndexOf(" "));
@@ -112,10 +114,10 @@ function cleanUpData(students){
                 clone.middleName = rightCase(middleName);
             }
         }
-        //house
+        // house
         let house = clearSpace(stud.house);
         clone.house = rightCase(house);
-        //picture
+        // picture
         if(lastName !== undefined){
             let lowerSurname;
             if(hasHyphen(lastName)){
@@ -132,7 +134,6 @@ function cleanUpData(students){
             }
             clone.pic = `img/${lowerSurname}_${nameLetter}.png`.toLowerCase();
         }
-        //console.log(clone);
         allStudents.push(clone);
     })
     filterHouse();
@@ -149,8 +150,17 @@ function setSettings(){
     }
 }
 
-//filtering
-function setHouseFilter(a){
+function modalExpelStyle(){
+    HTML.expelBtn.classList.add("d-none");
+    HTML.modalexpelHeading.classList.remove("d-none");
+}
+
+function listExpelStyle(){
+    HTML.expelHeading.classList.remove("d-none");
+}
+
+// filtering
+function filteredByHouse(a){
     const onlyHouse = a.filter(student => {
         if(student.house.toLowerCase() === settings.filter.toLowerCase()){
             return true;
@@ -164,22 +174,24 @@ function setHouseFilter(a){
 function filterHouse(){
     if(settings.filter === "*"){
         showStudents(allStudents, HTML.dataList);
+
         if(expelledStudents.length !== 0){
+            listExpelStyle();
             showStudents(expelledStudents, HTML.expelledList);
         }
     }else{
-        showStudents(setHouseFilter(allStudents), HTML.dataList);
-        showStudents(setHouseFilter(expelledStudents), HTML.expelledList);
+        showStudents(filteredByHouse(allStudents), HTML.dataList);
+        showStudents(filteredByHouse(expelledStudents), HTML.expelledList);
 
-        if(setHouseFilter(expelledStudents).length !== 0){
+        if(filteredByHouse(expelledStudents).length !== 0){
             listExpelStyle();
         }else{
-            HTML.expelHeading.classList.add("optional");
+            HTML.expelHeading.classList.add("d-none");
         }
     }
 }
 
-//sorting
+// sorting
 function compareFirstName(a,b){
     if(a.firstName < b.firstName){
         return -1;
@@ -230,14 +242,11 @@ function getSingleStudent(id){
     }
 }
 
-//modal taken from https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_modal
-const modal = document.getElementById("myModal");
+// modal start - taken from https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_modal
 const span = document.getElementsByClassName("close")[0];
 
 function popup(){
     const studentData = getSingleStudent(this.dataset.id);
-    //const studentData = allStudents.find( ({ firstName }) => firstName === this.dataset.id );
-    //console.log(studentData);
     HTML.modalContent.dataset.house = studentData.house;
     HTML.pic.src = studentData.pic;
     HTML.pic.alt = `${studentData.firstName}-picture`;
@@ -249,66 +258,60 @@ function popup(){
     HTML.expelBtn.dataset.id = studentData.firstName;
 
     if(studentData.middleName){
-        HTML.modalMiddleName.parentElement.classList.remove("optional");
+        HTML.modalMiddleName.parentElement.classList.remove("d-none");
         HTML.modalMiddleName.textContent = studentData.middleName;
     }else{
-        HTML.modalMiddleName.parentElement.classList.add("optional");
+        HTML.modalMiddleName.parentElement.classList.add("d-none");
     }
 
     if(studentData.nickName){
-        HTML.modalNickName.parentElement.classList.remove("optional");
+        HTML.modalNickName.parentElement.classList.remove("d-none");
         HTML.modalNickName.textContent = studentData.nickName;
     }else{
-        HTML.modalNickName.parentElement.classList.add("optional");
+        HTML.modalNickName.parentElement.classList.add("d-none");
     }
 
     if(expelledStudents.some(e => e.firstName === studentData.firstName)){
         modalExpelStyle();
     }else{
-        HTML.expelBtn.classList.remove("optional");
-        HTML.modalexpelHeading.classList.add("optional");
+        HTML.expelBtn.classList.remove("d-none");
+        HTML.modalexpelHeading.classList.add("d-none");
     }
-    // to do: should add classList to keep separation of concerns
-    modal.style.display = "block";
+    HTML.modal.classList.remove("d-none");
 }
 
 span.onclick = function() {
-    modal.style.display = "none";
+    HTML.modal.classList.add("d-none");
   }
   
 window.onclick = function(event) {
-if (event.target == modal) {
-    modal.style.display = "none";
+if (event.target == HTML.modal) {
+    HTML.modal.classList.add("d-none");
 }
 }
+// modal end
 
-function modalExpelStyle(){
-    HTML.expelBtn.classList.add("optional");
-    HTML.modalexpelHeading.classList.remove("optional");
-}
-
-function listExpelStyle(){
-    HTML.expelHeading.classList.remove("optional");
-}
-
+// expelling students
 function expel(){
     const studentData = getSingleStudent(this.dataset.id);
     if(studentData.cannotBeExpelled === false){
-        //console.log(`Remove ${this.dataset.id}`);
         expelledStudents.push(studentData);
         allStudents.splice(allStudents.indexOf(studentData), 1);
         modalExpelStyle();
-        listExpelStyle();
         filterHouse();
     }
 }
 
-//hacking the system
+// hacking the system
 function hackTheSystem(){
-    const mySelf = Object.create( Student );
-    mySelf.firstName = "MTthought";
-    mySelf.house = "Gryffindor";
-    mySelf.cannotBeExpelled = true;
-    allStudents.push( mySelf );
-    filterHouse();
+    // the system keeps track of whether it has been hacked
+    if (!settings.hackedSystem){
+        settings.hackedSystem = true;
+        const mySelf = Object.create( Student );
+        mySelf.firstName = "MTthought";
+        mySelf.house = "Gryffindor";
+        mySelf.cannotBeExpelled = true;
+        allStudents.push( mySelf );
+        filterHouse();
+    }
 }

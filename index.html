@@ -27,7 +27,7 @@
   </select>
   
   <div id="dataList" class="container"></div>
-  <h2 class="optional mt">Expelled students</h2>
+  <h2 class="d-none mt">Expelled students</h2>
   <div id="expelledList" class="container"></div>
   
   <template class="templates">
@@ -38,7 +38,7 @@
   </template>
 
   <!-- The Modal -->
-  <div id="myModal" class="modal">
+  <div id="myModal" class="modal d-none">
 
     <!-- Modal content -->
     <div class="modal-content" data-house="">
@@ -54,7 +54,7 @@
             <div><span class="house">House: </span><span class="name" id="house"></span></div>
         </div>
         <div class="col">
-          <h3 class="name optional">Expelled</h3>
+          <h3 class="name d-none">Expelled</h3>
           <button data-id="" class="btn">Expel</button>
         </div>
       </div>
