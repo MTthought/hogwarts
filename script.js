@@ -7,7 +7,7 @@ const HTML = {};
 const settings = {
     filter: "*",
     sortBy: null,
-    search: null,
+    search: "",
     hackedSystem: false
 }
 // the prototype for all students
@@ -24,7 +24,7 @@ const Student = {
 function init(){
     HTML.studentTemplate = document.querySelector(".templates");
     HTML.search = document.querySelector("#search");
-    HTML.studentNumbers = document.querySelector(".studentNumbers");
+    HTML.counter = document.querySelector(".studentNumbers");
     HTML.dataList = document.querySelector("#dataList");
     HTML.expelledList = document.querySelector("#expelledList");
     HTML.modal = document.getElementById("myModal");
@@ -44,7 +44,7 @@ function init(){
 
     HTML.options.forEach(option => option.addEventListener("change", setSettings));
     HTML.expelBtn.addEventListener("click", expel);
-    HTML.search.addEventListener("keyup", search);
+    HTML.search.addEventListener("keyup", filter);
     getData();
 }
 
@@ -140,13 +140,13 @@ function cleanUpData(students){
         }
         allStudents.push(clone);
     })
-    filterHouse();
+    filter();
 }
 
 function setSettings(){
     if(this.dataset.action === "filter"){
         settings.filter = this.value;
-        filterHouse();
+        filter();
     }else if(this.dataset.action === "sort"){
         HTML.unsorted.setAttribute("disabled", true);
         settings.sortBy = this.value;
@@ -164,8 +164,8 @@ function listExpelStyle(){
 }
 
 // filtering
-function search(){
-    settings.search = HTML.search.value.trim();
+
+function filterSearch(){
     const match = allStudents.filter(student => {
         if(student.firstName.toLowerCase().includes(settings.search.toLowerCase()) 
         || student.lastName.toLowerCase().includes(settings.search.toLowerCase())){
@@ -174,10 +174,10 @@ function search(){
             return false;
         }
     });
-    showStudents(match, HTML.dataList);
+    return match;
 }
 
-function filteredByHouse(a, house){
+function filterHouse(a, house){
     const onlyHouse = a.filter(student => {
         if(student.house.toLowerCase() === house.toLowerCase()){
             return true;
@@ -188,19 +188,24 @@ function filteredByHouse(a, house){
     return onlyHouse;
 }
 
-function filterHouse(){
-    let n = HTML.studentNumbers;
-    n.querySelector("span:nth-child(1)").textContent = filteredByHouse(allStudents, "Gryffindor").length;
-    n.querySelector("span:nth-child(2)").textContent = filteredByHouse(allStudents, "Hufflepuff").length;
-    n.querySelector("span:nth-child(3)").textContent = filteredByHouse(allStudents, "Ravenclaw").length;
-    n.querySelector("span:nth-child(4)").textContent = filteredByHouse(allStudents, "Slytherin").length;
+function setCounter(onDisplay){
+    let n = HTML.counter;
+    n.querySelector("span:nth-child(1)").textContent = filterHouse(allStudents, "Gryffindor").length;
+    n.querySelector("span:nth-child(2)").textContent = filterHouse(allStudents, "Hufflepuff").length;
+    n.querySelector("span:nth-child(3)").textContent = filterHouse(allStudents, "Ravenclaw").length;
+    n.querySelector("span:nth-child(4)").textContent = filterHouse(allStudents, "Slytherin").length;
     n.querySelector("span:nth-child(5)").textContent = allStudents.length;
     n.querySelector("span:nth-child(6)").textContent = expelledStudents.length;
-    let onDisplay = n.querySelector("span:nth-child(7)");
+    n.querySelector("span:nth-child(7)").textContent = onDisplay;
+}
+
+function filter(){
+    settings.search = HTML.search.value.trim();
+    let students = filterSearch();
 
     if(settings.filter === "*"){
-        onDisplay.textContent = allStudents.length + expelledStudents.length;
-        showStudents(allStudents, HTML.dataList);
+        setCounter(students.length + expelledStudents.length);
+        showStudents(students, HTML.dataList);
 
         if(expelledStudents.length !== 0){
             listExpelStyle();
@@ -208,13 +213,13 @@ function filterHouse(){
         }
     }else{
         let filter = settings.filter;
-        let houseStudents = filteredByHouse(allStudents, filter);
-        let expHouseStudents = filteredByHouse(expelledStudents, filter);
-        onDisplay.textContent = houseStudents.length + expHouseStudents.length;
+        let houseStudents = filterHouse(students, filter);
+        let expHouseStudents = filterHouse(expelledStudents, filter);
+        setCounter(houseStudents.length + expHouseStudents.length);
         showStudents(houseStudents, HTML.dataList);
         showStudents(expHouseStudents, HTML.expelledList);
 
-        if(filteredByHouse(expelledStudents, filter).length !== 0){
+        if(filterHouse(expelledStudents, filter).length !== 0){
             listExpelStyle();
         }else{
             HTML.expelHeading.classList.add("d-none");
@@ -245,7 +250,7 @@ function sortName(){
     }else if(settings.sortBy === "lastName"){
         allStudents.sort(compareLastName);
     }
-    filterHouse();
+    filter();
 }
 
 function showStudents(students, inner) {
@@ -329,7 +334,7 @@ function expel(){
         expelledStudents.push(studentData);
         allStudents.splice(allStudents.indexOf(studentData), 1);
         modalExpelStyle();
-        filterHouse();
+        filter();
     }
 }
 
@@ -343,6 +348,6 @@ function hackTheSystem(){
         mySelf.house = "Gryffindor";
         mySelf.cannotBeExpelled = true;
         allStudents.push( mySelf );
-        filterHouse();
+        filter();
     }
 }
