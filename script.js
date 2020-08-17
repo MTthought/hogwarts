@@ -7,6 +7,7 @@ const HTML = {};
 const settings = {
     filter: "*",
     sortBy: null,
+    search: null,
     hackedSystem: false
 }
 // the prototype for all students
@@ -22,6 +23,8 @@ const Student = {
 
 function init(){
     HTML.studentTemplate = document.querySelector(".templates");
+    HTML.search = document.querySelector("#search");
+    HTML.studentNumbers = document.querySelector(".studentNumbers");
     HTML.dataList = document.querySelector("#dataList");
     HTML.expelledList = document.querySelector("#expelledList");
     HTML.modal = document.getElementById("myModal");
@@ -41,13 +44,14 @@ function init(){
 
     HTML.options.forEach(option => option.addEventListener("change", setSettings));
     HTML.expelBtn.addEventListener("click", expel);
+    HTML.search.addEventListener("keyup", search);
     getData();
 }
 
 async function getData(){
     const response = await fetch("https://petlatkea.dk/2020/hogwarts/students.json");
     const students = await response.json();
-    cleanUpData(students)
+    cleanUpData(students);
 }
 
 // string cleaner
@@ -160,9 +164,22 @@ function listExpelStyle(){
 }
 
 // filtering
-function filteredByHouse(a){
+function search(){
+    settings.search = HTML.search.value.trim();
+    const match = allStudents.filter(student => {
+        if(student.firstName.toLowerCase().includes(settings.search.toLowerCase()) 
+        || student.lastName.toLowerCase().includes(settings.search.toLowerCase())){
+            return true;
+        }else{
+            return false;
+        }
+    });
+    showStudents(match, HTML.dataList);
+}
+
+function filteredByHouse(a, house){
     const onlyHouse = a.filter(student => {
-        if(student.house.toLowerCase() === settings.filter.toLowerCase()){
+        if(student.house.toLowerCase() === house.toLowerCase()){
             return true;
         }else{
             return false;
@@ -172,7 +189,17 @@ function filteredByHouse(a){
 }
 
 function filterHouse(){
+    let n = HTML.studentNumbers;
+    n.querySelector("span:nth-child(1)").textContent = filteredByHouse(allStudents, "Gryffindor").length;
+    n.querySelector("span:nth-child(2)").textContent = filteredByHouse(allStudents, "Hufflepuff").length;
+    n.querySelector("span:nth-child(3)").textContent = filteredByHouse(allStudents, "Ravenclaw").length;
+    n.querySelector("span:nth-child(4)").textContent = filteredByHouse(allStudents, "Slytherin").length;
+    n.querySelector("span:nth-child(5)").textContent = allStudents.length;
+    n.querySelector("span:nth-child(6)").textContent = expelledStudents.length;
+    let onDisplay = n.querySelector("span:nth-child(7)");
+
     if(settings.filter === "*"){
+        onDisplay.textContent = allStudents.length + expelledStudents.length;
         showStudents(allStudents, HTML.dataList);
 
         if(expelledStudents.length !== 0){
@@ -180,10 +207,14 @@ function filterHouse(){
             showStudents(expelledStudents, HTML.expelledList);
         }
     }else{
-        showStudents(filteredByHouse(allStudents), HTML.dataList);
-        showStudents(filteredByHouse(expelledStudents), HTML.expelledList);
+        let filter = settings.filter;
+        let houseStudents = filteredByHouse(allStudents, filter);
+        let expHouseStudents = filteredByHouse(expelledStudents, filter);
+        onDisplay.textContent = houseStudents.length + expHouseStudents.length;
+        showStudents(houseStudents, HTML.dataList);
+        showStudents(expHouseStudents, HTML.expelledList);
 
-        if(filteredByHouse(expelledStudents).length !== 0){
+        if(filteredByHouse(expelledStudents, filter).length !== 0){
             listExpelStyle();
         }else{
             HTML.expelHeading.classList.add("d-none");

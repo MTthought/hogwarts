@@ -53,6 +53,10 @@ label {
   flex-wrap: wrap;
 }
 
+.studentNumbers{
+  float: right;
+}
+
 #dataList, #expelledList{
   margin: auto -.5em;
 }
