@@ -43,9 +43,10 @@ img.crest {
   height: 5em;
 }
 
-label {
+label, .studentNumbers {
   color: var(--primary-color);
   font-size: small;
+  margin-top: 1em;
 }
 
 .container{
@@ -53,12 +54,12 @@ label {
   flex-wrap: wrap;
 }
 
-.studentNumbers{
-  float: right;
+.studentNumbers > span{
+  font-weight: 700;
 }
 
 #dataList, #expelledList{
-  margin: auto -.5em;
+  margin: 1em -.5em;
 }
 
 h1, h2, .name{
@@ -137,4 +138,11 @@ h1, h2, .name{
 }
 .btn:hover{
   background-image: linear-gradient(to bottom, var(--secondary-color) 0%, var(--primary-color) 100%);
+}
+
+@media only screen and (min-width: 1024px) {
+  .studentNumbers{
+    float: right;
+    margin-top: .2em;
+  }
 }

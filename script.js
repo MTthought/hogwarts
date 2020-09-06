@@ -43,8 +43,8 @@ function init(){
     HTML.expelHeading = document.querySelector("body > h2");
 
     HTML.options.forEach(option => option.addEventListener("change", setSettings));
+    HTML.search.addEventListener("keyup", setSettings);
     HTML.expelBtn.addEventListener("click", expel);
-    HTML.search.addEventListener("keyup", filter);
     getData();
 }
 
@@ -144,6 +144,10 @@ function cleanUpData(students){
 }
 
 function setSettings(){
+    if(this.type==="text"){
+        settings.search = HTML.search.value.trim();
+        filter();
+    }
     if(this.dataset.action === "filter"){
         settings.filter = this.value;
         filter();
@@ -164,7 +168,6 @@ function listExpelStyle(){
 }
 
 // filtering
-
 function filterSearch(){
     const match = allStudents.filter(student => {
         if(student.firstName.toLowerCase().includes(settings.search.toLowerCase()) 
@@ -200,7 +203,6 @@ function setCounter(onDisplay){
 }
 
 function filter(){
-    settings.search = HTML.search.value.trim();
     let students = filterSearch();
 
     if(settings.filter === "*"){
