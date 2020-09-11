@@ -18,6 +18,7 @@ const Student = {
     nickName: null,
     pic: "img/blank-profile.png",
     house: "",
+    bloodStatus: "",
     cannotBeExpelled: false
 }
 
@@ -36,6 +37,7 @@ function init(){
     HTML.modalHouse = document.querySelector("#house");
     HTML.modalMiddleName = document.querySelector("#middleName");
     HTML.modalNickName = document.querySelector("#nickName");
+    HTML.modalBloodStatus = document.querySelector("#bloodStatus");
     HTML.modalexpelHeading = HTML.modalContent.querySelector("h3");
     HTML.unsorted = document.querySelector("#nameSorting > option:nth-child(1)");
     HTML.options = document.querySelectorAll("select");
@@ -49,10 +51,18 @@ function init(){
 }
 
 async function getData(){
-    const response = await fetch("https://petlatkea.dk/2020/hogwarts/students.json");
-    const students = await response.json();
-    cleanUpData(students);
+    const studresponse = await fetch("https://petlatkea.dk/2020/hogwarts/students.json");
+    const students = await studresponse.json();
+    const famresponse = await fetch("https://petlatkea.dk/2020/hogwarts/families.json");
+    const families = await famresponse.json();
+    cleanUpData(students, families);
 }
+
+// async function getFamilyData(){
+//     const response = await fetch("https://petlatkea.dk/2020/hogwarts/families.json");
+//     const families = await response.json();
+//     console.log(families);
+// }
 
 // string cleaner
 function clearSpace(name){
@@ -92,7 +102,7 @@ function hasHyphen(name){
     }
 }
 
-function cleanUpData(students){
+function cleanUpData(students, families){
     students.forEach(stud => {
         const clone = Object.create ( Student );
         let fullName = clearSpace(stud.fullname);
@@ -138,6 +148,12 @@ function cleanUpData(students){
             }
             clone.pic = `img/${lowerSurname}_${nameLetter}.png`.toLowerCase();
         }
+        // blood-status
+        if(filterFam(families.half, clone.lastName).length){
+            clone.bloodStatus = "Half";
+        }else{
+            clone.bloodStatus = "Pure";
+        }
         allStudents.push(clone);
     })
     filter();
@@ -168,10 +184,9 @@ function listExpelStyle(){
 }
 
 // filtering
-function filterSearch(){
-    const match = allStudents.filter(student => {
-        if(student.firstName.toLowerCase().includes(settings.search.toLowerCase()) 
-        || student.lastName.toLowerCase().includes(settings.search.toLowerCase())){
+function filterFam(array, surname){
+    const match = array.filter(family => {
+        if(family === surname){
             return true;
         }else{
             return false;
@@ -180,8 +195,20 @@ function filterSearch(){
     return match;
 }
 
-function filterHouse(a, house){
-    const onlyHouse = a.filter(student => {
+function filterSearch(name){
+    const match = allStudents.filter(student => {
+        if(student.firstName.toLowerCase().includes(name) 
+        || student.lastName.toLowerCase().includes(name)){
+            return true;
+        }else{
+            return false;
+        }
+    });
+    return match;
+}
+
+function filterHouse(array, house){
+    const onlyHouse = array.filter(student => {
         if(student.house.toLowerCase() === house.toLowerCase()){
             return true;
         }else{
@@ -203,8 +230,7 @@ function setCounter(onDisplay){
 }
 
 function filter(){
-    let students = filterSearch();
-
+    let students = filterSearch(settings.search.toLowerCase());
     if(settings.filter === "*"){
         setCounter(students.length + expelledStudents.length);
         showStudents(students, HTML.dataList);
@@ -293,6 +319,7 @@ function popup(){
     HTML.modalFirstName.textContent = studentData.firstName;
     HTML.modalLastName.textContent = studentData.lastName;
     HTML.modalHouse.textContent = studentData.house;
+    HTML.modalBloodStatus.textContent = studentData.bloodStatus;
     HTML.expelBtn.dataset.id = studentData.firstName;
 
     if(studentData.middleName){
