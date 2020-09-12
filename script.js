@@ -58,12 +58,6 @@ async function getData(){
     cleanUpData(students, families);
 }
 
-// async function getFamilyData(){
-//     const response = await fetch("https://petlatkea.dk/2020/hogwarts/families.json");
-//     const families = await response.json();
-//     console.log(families);
-// }
-
 // string cleaner
 function clearSpace(name){
     if(name.indexOf(" ") === 0){
@@ -149,24 +143,25 @@ function cleanUpData(students, families){
             clone.pic = `img/${lowerSurname}_${nameLetter}.png`.toLowerCase();
         }
         // blood-status
-        if(filterFam(families.half, clone.lastName).length){
+        if(filter(families.half, clone.lastName).length){
             clone.bloodStatus = "Half";
         }else{
             clone.bloodStatus = "Pure";
         }
         allStudents.push(clone);
     })
-    filter();
+    setCounter(allStudents.length);
+    showStudents(allStudents, HTML.dataList);
 }
 
 function setSettings(){
     if(this.type==="text"){
         settings.search = HTML.search.value.trim();
-        filter();
+        filterSearchHouse();
     }
     if(this.dataset.action === "filter"){
         settings.filter = this.value;
-        filter();
+        filterSearchHouse();
     }else if(this.dataset.action === "sort"){
         HTML.unsorted.setAttribute("disabled", true);
         settings.sortBy = this.value;
@@ -184,74 +179,55 @@ function listExpelStyle(){
 }
 
 // filtering
-function filterFam(array, surname){
-    const match = array.filter(family => {
-        if(family === surname){
+function filter(array, target){
+    const match = array.filter(element => {
+        //filters options house and search input if array contains objects
+        if(typeof element === "object" 
+        && (element.house.toLowerCase() === target.toLowerCase() 
+        || element.firstName.toLowerCase().includes(target) 
+        || element.lastName.toLowerCase().includes(target)) 
+        //filters family if array contains strings
+        || element === target){
             return true;
         }else{
             return false;
         }
     });
     return match;
-}
-
-function filterSearch(name){
-    const match = allStudents.filter(student => {
-        if(student.firstName.toLowerCase().includes(name) 
-        || student.lastName.toLowerCase().includes(name)){
-            return true;
-        }else{
-            return false;
-        }
-    });
-    return match;
-}
-
-function filterHouse(array, house){
-    const onlyHouse = array.filter(student => {
-        if(student.house.toLowerCase() === house.toLowerCase()){
-            return true;
-        }else{
-            return false;
-        }
-    });
-    return onlyHouse;
 }
 
 function setCounter(onDisplay){
     let n = HTML.counter;
-    n.querySelector("span:nth-child(1)").textContent = filterHouse(allStudents, "Gryffindor").length;
-    n.querySelector("span:nth-child(2)").textContent = filterHouse(allStudents, "Hufflepuff").length;
-    n.querySelector("span:nth-child(3)").textContent = filterHouse(allStudents, "Ravenclaw").length;
-    n.querySelector("span:nth-child(4)").textContent = filterHouse(allStudents, "Slytherin").length;
+    n.querySelector("span:nth-child(1)").textContent = filter(allStudents, "Gryffindor").length;
+    n.querySelector("span:nth-child(2)").textContent = filter(allStudents, "Hufflepuff").length;
+    n.querySelector("span:nth-child(3)").textContent = filter(allStudents, "Ravenclaw").length;
+    n.querySelector("span:nth-child(4)").textContent = filter(allStudents, "Slytherin").length;
     n.querySelector("span:nth-child(5)").textContent = allStudents.length;
     n.querySelector("span:nth-child(6)").textContent = expelledStudents.length;
     n.querySelector("span:nth-child(7)").textContent = onDisplay;
 }
 
-function filter(){
-    let students = filterSearch(settings.search.toLowerCase());
-    if(settings.filter === "*"){
-        setCounter(students.length + expelledStudents.length);
-        showStudents(students, HTML.dataList);
+function filterHouse(students, expelled){
+    setCounter(students.length + expelled.length);
+    showStudents(students, HTML.dataList);
+    showStudents(expelled, HTML.expelledList);
 
-        if(expelledStudents.length !== 0){
-            listExpelStyle();
-            showStudents(expelledStudents, HTML.expelledList);
-        }
+    if(expelled.length !== 0){
+        listExpelStyle();  
     }else{
-        let filter = settings.filter;
-        let houseStudents = filterHouse(students, filter);
-        let expHouseStudents = filterHouse(expelledStudents, filter);
-        setCounter(houseStudents.length + expHouseStudents.length);
-        showStudents(houseStudents, HTML.dataList);
-        showStudents(expHouseStudents, HTML.expelledList);
+        HTML.expelHeading.classList.add("d-none");
+    }
+}
 
-        if(filterHouse(expelledStudents, filter).length !== 0){
-            listExpelStyle();
-        }else{
-            HTML.expelHeading.classList.add("d-none");
-        }
+function filterSearchHouse(){
+    let students = filter(allStudents, settings.search.toLowerCase());
+    let expStudents = filter(expelledStudents, settings.search.toLowerCase());
+
+    if(settings.filter === "*"){
+        filterHouse(students, expStudents)
+    }else{
+        let house = settings.filter;
+        filterHouse(filter(students, house), filter(expStudents, house))
     }
 }
 
@@ -278,7 +254,7 @@ function sortName(){
     }else if(settings.sortBy === "lastName"){
         allStudents.sort(compareLastName);
     }
-    filter();
+    filterSearchHouse();
 }
 
 function showStudents(students, inner) {
@@ -363,7 +339,7 @@ function expel(){
         expelledStudents.push(studentData);
         allStudents.splice(allStudents.indexOf(studentData), 1);
         modalExpelStyle();
-        filter();
+        filterSearchHouse();
     }
 }
 
@@ -377,6 +353,6 @@ function hackTheSystem(){
         mySelf.house = "Gryffindor";
         mySelf.cannotBeExpelled = true;
         allStudents.push( mySelf );
-        filter();
+        filterSearchHouse();
     }
 }
