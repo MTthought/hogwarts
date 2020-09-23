@@ -19,6 +19,7 @@ const Student = {
     pic: "img/blank-profile.png",
     house: "",
     bloodStatus: "",
+    prefect: false,
     cannotBeExpelled: false
 }
 
@@ -38,15 +39,18 @@ function init(){
     HTML.modalMiddleName = document.querySelector("#middleName");
     HTML.modalNickName = document.querySelector("#nickName");
     HTML.modalBloodStatus = document.querySelector("#bloodStatus");
+    HTML.modalPrefect = document.querySelector("#prefect");
     HTML.modalexpelHeading = HTML.modalContent.querySelector("h3");
+    HTML.prefecttitle = HTML.modalContent.querySelector("p");
+    HTML.prefectmsg = HTML.modalContent.querySelector("p:nth-of-type(2)");
+    HTML.expelBtn = document.querySelector("button");
+    HTML.prefectBtn = document.querySelector("button:nth-of-type(2)");
     HTML.unsorted = document.querySelector("#nameSorting > option:nth-child(1)");
     HTML.options = document.querySelectorAll("select");
-    HTML.expelBtn = document.querySelector("button");
     HTML.expelHeading = document.querySelector("body > h2");
 
     HTML.options.forEach(option => option.addEventListener("change", setSettings));
     HTML.search.addEventListener("keyup", setSettings);
-    HTML.expelBtn.addEventListener("click", expel);
     getData();
 }
 
@@ -144,9 +148,9 @@ function cleanUpData(students, families){
         }
         // blood-status
         if(filter(families.half, clone.lastName).length){
-            clone.bloodStatus = "Half";
+            clone.bloodStatus = "half";
         }else{
-            clone.bloodStatus = "Pure";
+            clone.bloodStatus = "pure";
         }
         allStudents.push(clone);
     })
@@ -169,15 +173,6 @@ function setSettings(){
     }
 }
 
-function modalExpelStyle(){
-    HTML.expelBtn.classList.add("d-none");
-    HTML.modalexpelHeading.classList.remove("d-none");
-}
-
-function listExpelStyle(){
-    HTML.expelHeading.classList.remove("d-none");
-}
-
 // filtering
 function filter(array, target){
     const match = array.filter(element => {
@@ -188,6 +183,17 @@ function filter(array, target){
         || element.lastName.toLowerCase().includes(target)) 
         //filters family if array contains strings
         || element === target){
+            return true;
+        }else{
+            return false;
+        }
+    });
+    return match;
+}
+
+function filterPrefect(array){
+    const match = array.filter(element => {
+        if(element.prefect === true){
             return true;
         }else{
             return false;
@@ -274,7 +280,9 @@ function showStudents(students, inner) {
     })
 }
 
-function getSingleStudent(id){
+// The find() method returns the first value that matches from the array.
+// Once it matches the value in findings, it will not check the remaining values in the array
+function findStudent(id){
     if(allStudents.some(e => e.firstName === id )){
         return allStudents.find( ({ firstName }) => firstName === id );
     }else{
@@ -286,8 +294,9 @@ function getSingleStudent(id){
 const span = document.getElementsByClassName("close")[0];
 
 function popup(){
-    const studentData = getSingleStudent(this.dataset.id);
+    const studentData = findStudent(this.dataset.id);
     HTML.modalContent.dataset.house = studentData.house;
+    HTML.modalContent.dataset.id = studentData.firstName;
     HTML.pic.src = studentData.pic;
     HTML.pic.alt = `${studentData.firstName}-picture`;
     HTML.crest.src = `img/${studentData.house}.svg`;
@@ -296,7 +305,9 @@ function popup(){
     HTML.modalLastName.textContent = studentData.lastName;
     HTML.modalHouse.textContent = studentData.house;
     HTML.modalBloodStatus.textContent = studentData.bloodStatus;
-    HTML.expelBtn.dataset.id = studentData.firstName;
+    prefectText(studentData.prefect);
+    HTML.expelBtn.addEventListener("click", expel);
+    HTML.prefectBtn.addEventListener("click", prefect);
 
     if(studentData.middleName){
         HTML.modalMiddleName.parentElement.classList.remove("d-none");
@@ -316,8 +327,16 @@ function popup(){
         modalExpelStyle();
     }else{
         HTML.expelBtn.classList.remove("d-none");
+        HTML.prefectBtn.classList.remove("d-none");
         HTML.modalexpelHeading.classList.add("d-none");
     }
+
+    if(HTML.prefecttitle.parentElement.dataset.msg === "active"){
+        HTML.prefecttitle.textContent = "";
+        HTML.prefectmsg.textContent = "";
+        HTML.prefecttitle.parentElement.dataset.msg = "inactive";
+    }
+
     HTML.modal.classList.remove("d-none");
 }
 
@@ -334,12 +353,54 @@ if (event.target == HTML.modal) {
 
 // expelling students
 function expel(){
-    const studentData = getSingleStudent(this.dataset.id);
-    if(studentData.cannotBeExpelled === false){
+    const studentData = findStudent(HTML.modalContent.dataset.id);
+    if(!studentData.cannotBeExpelled){
+        if(studentData.prefect){
+            prefect();
+        }
         expelledStudents.push(studentData);
         allStudents.splice(allStudents.indexOf(studentData), 1);
         modalExpelStyle();
         filterSearchHouse();
+    }
+}
+
+function modalExpelStyle(){
+    HTML.expelBtn.classList.add("d-none");
+    HTML.prefectBtn.classList.add("d-none");
+    HTML.modalexpelHeading.classList.remove("d-none");
+}
+
+function listExpelStyle(){
+    HTML.expelHeading.classList.remove("d-none");
+}
+
+// making prefects
+function prefect(){
+    const studentData = findStudent(HTML.modalContent.dataset.id);
+    const houseStudents = filter(allStudents, studentData.house);
+    const housePrefects = filterPrefect(houseStudents);
+    if(!studentData.prefect && housePrefects.length < 2){
+        studentData.prefect = true;
+    }else{
+        studentData.prefect = false;
+        if(housePrefects.length === 2 && !housePrefects.find(element => element === studentData)){
+            HTML.prefecttitle.parentElement.dataset.msg = "active";
+            HTML.prefecttitle.textContent = `Too many prefects at ${studentData.house}`;
+            HTML.prefectmsg.textContent = `Revoke ${housePrefects[0].firstName} ${housePrefects[0].lastName} or ${housePrefects[1].firstName} ${housePrefects[1].lastName} 
+            to make ${studentData.firstName} a prefect`;
+        }
+    }
+    prefectText(studentData.prefect);
+}
+
+function prefectText(prefect){
+    if(!prefect){
+        HTML.modalPrefect.textContent = "no";
+        HTML.prefectBtn.textContent = "Make prefect";
+    }else{
+        HTML.modalPrefect.textContent = "yes";
+        HTML.prefectBtn.textContent = "Revoke prefect";
     }
 }
 
@@ -351,6 +412,7 @@ function hackTheSystem(){
         const mySelf = Object.create( Student );
         mySelf.firstName = "MTthought";
         mySelf.house = "Gryffindor";
+        mySelf.bloodStatus = "half";
         mySelf.cannotBeExpelled = true;
         allStudents.push( mySelf );
         filterSearchHouse();

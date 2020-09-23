@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="styles.css">
-    <title>students1991</title>
+    <title>Hogwarts 1991</title>
 </head>
 <body>
   <h1>Hogwarts 1991</h1>
@@ -52,7 +52,7 @@
   <div id="myModal" class="modal d-none">
 
     <!-- Modal content -->
-    <div class="modal-content" data-house="">
+    <div class="modal-content" data-house="" data-id="">
       <span class="close">&times;</span>
       <div class="container">
         <img src="" alt="" class="crest">
@@ -64,10 +64,16 @@
             <div><span class="house">Nick name: </span><span class="name" id="nickName"></span></div>
             <div><span class="house">House: </span><span class="name" id="house"></span></div>
             <div><span class="house">Blood-status: </span><span class="name" id="bloodStatus"></span></div>
+            <div><span class="house">Prefect: </span><span class="name" id="prefect"></span></div>
         </div>
         <div class="col">
           <h3 class="name d-none">Expelled</h3>
-          <button data-id="" class="btn">Expel</button>
+          <button class="btn">Expel</button>
+          <button class="btn"></button>
+          <div data-msg="inactive">
+            <p class="name"></p>
+            <p class="house"></p>
+          </div>
         </div>
       </div>
     </div>
