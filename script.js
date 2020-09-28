@@ -18,8 +18,9 @@ const Student = {
     nickName: null,
     pic: "img/blank-profile.png",
     house: "",
-    bloodStatus: "",
+    bloodStatus: true,
     prefect: false,
+    inquisitorialSquad: false,
     cannotBeExpelled: false
 }
 
@@ -40,17 +41,19 @@ function init(){
     HTML.modalNickName = document.querySelector("#nickName");
     HTML.modalBloodStatus = document.querySelector("#bloodStatus");
     HTML.modalPrefect = document.querySelector("#prefect");
+    HTML.modalSquad = document.querySelector("#inquisitorialSquad");
     HTML.modalexpelHeading = HTML.modalContent.querySelector("h3");
-    HTML.prefecttitle = HTML.modalContent.querySelector("p");
-    HTML.prefectmsg = HTML.modalContent.querySelector("p:nth-of-type(2)");
+    HTML.errortitle = HTML.modalContent.querySelector("p");
+    HTML.errormsg = HTML.modalContent.querySelector("p:nth-of-type(2)");
     HTML.expelBtn = document.querySelector("button");
     HTML.prefectBtn = document.querySelector("button:nth-of-type(2)");
+    HTML.squadBtn = document.querySelector("button:nth-of-type(3)");
     HTML.unsorted = document.querySelector("#nameSorting > option:nth-child(1)");
     HTML.options = document.querySelectorAll("select");
     HTML.expelHeading = document.querySelector("body > h2");
 
-    HTML.options.forEach(option => option.addEventListener("change", setSettings));
-    HTML.search.addEventListener("keyup", setSettings);
+    HTML.options.forEach(option => option.addEventListener("change", setOptions));
+    HTML.search.addEventListener("keyup", setSearch);
     getData();
 }
 
@@ -148,28 +151,33 @@ function cleanUpData(students, families){
         }
         // blood-status
         if(filter(families.half, clone.lastName).length){
-            clone.bloodStatus = "half";
+            clone.bloodStatus = false;
         }else{
-            clone.bloodStatus = "pure";
+            clone.bloodStatus = true;
         }
+
         allStudents.push(clone);
     })
     setCounter(allStudents.length);
     showStudents(allStudents, HTML.dataList);
 }
 
-function setSettings(){
-    if(this.type==="text"){
-        settings.search = HTML.search.value.trim();
-        filterSearchHouse();
-    }
+function setSearch(){
+    settings.search = HTML.search.value.trim();
+    filterSearchOptions();
+}
+
+function setOptions(){
     if(this.dataset.action === "filter"){
         settings.filter = this.value;
-        filterSearchHouse();
+        filterSearchOptions();
     }else if(this.dataset.action === "sort"){
         HTML.unsorted.setAttribute("disabled", true);
         settings.sortBy = this.value;
         sortName();
+    }
+    if(settings.hackedSystem){
+        randBlood();
     }
 }
 
@@ -213,27 +221,31 @@ function setCounter(onDisplay){
     n.querySelector("span:nth-child(7)").textContent = onDisplay;
 }
 
-function filterHouse(students, expelled){
+function filterView(students, expelled){
     setCounter(students.length + expelled.length);
     showStudents(students, HTML.dataList);
     showStudents(expelled, HTML.expelledList);
 
     if(expelled.length !== 0){
-        listExpelStyle();  
+        listExpelStyle();
     }else{
         HTML.expelHeading.classList.add("d-none");
     }
 }
 
-function filterSearchHouse(){
+function filterSearchOptions(){
     let students = filter(allStudents, settings.search.toLowerCase());
     let expStudents = filter(expelledStudents, settings.search.toLowerCase());
 
     if(settings.filter === "*"){
-        filterHouse(students, expStudents)
+        filterView(students, expStudents)
+    }else if(settings.filter === "expelled"){
+        filterView([], expStudents);
+    }else if(settings.filter === "nonExpelled"){
+        filterView(students, []);
     }else{
         let house = settings.filter;
-        filterHouse(filter(students, house), filter(expStudents, house))
+        filterView(filter(students, house), filter(expStudents, house))
     }
 }
 
@@ -260,7 +272,7 @@ function sortName(){
     }else if(settings.sortBy === "lastName"){
         allStudents.sort(compareLastName);
     }
-    filterSearchHouse();
+    filterSearchOptions();
 }
 
 function showStudents(students, inner) {
@@ -304,10 +316,23 @@ function popup(){
     HTML.modalFirstName.textContent = studentData.firstName;
     HTML.modalLastName.textContent = studentData.lastName;
     HTML.modalHouse.textContent = studentData.house;
-    HTML.modalBloodStatus.textContent = studentData.bloodStatus;
-    prefectText(studentData.prefect);
+    if(studentData.bloodStatus){
+        HTML.modalBloodStatus.textContent = "pure";
+    }else{
+        HTML.modalBloodStatus.textContent = "half";
+    }
     HTML.expelBtn.addEventListener("click", expel);
     HTML.prefectBtn.addEventListener("click", prefect);
+    text("prefect", studentData.prefect, HTML.modalPrefect, HTML.prefectBtn);
+    if(studentData.bloodStatus || studentData.house === "Slytherin"){
+        text("inquisitorial squad", studentData.inquisitorialSquad, HTML.modalSquad, HTML.squadBtn);
+        HTML.modalSquad.parentElement.classList.remove("d-none");
+        HTML.squadBtn.classList.remove("d-none");
+        HTML.squadBtn.addEventListener("click", squad);
+    }else{
+        HTML.modalSquad.parentElement.classList.add("d-none");
+        HTML.squadBtn.classList.add("d-none");
+    }
 
     if(studentData.middleName){
         HTML.modalMiddleName.parentElement.classList.remove("d-none");
@@ -331,10 +356,10 @@ function popup(){
         HTML.modalexpelHeading.classList.add("d-none");
     }
 
-    if(HTML.prefecttitle.parentElement.dataset.msg === "active"){
-        HTML.prefecttitle.textContent = "";
-        HTML.prefectmsg.textContent = "";
-        HTML.prefecttitle.parentElement.dataset.msg = "inactive";
+    if(HTML.errortitle.parentElement.dataset.msg === "active"){
+        HTML.errortitle.textContent = "";
+        HTML.errormsg.textContent = "";
+        HTML.errortitle.parentElement.dataset.msg = "inactive";
     }
 
     HTML.modal.classList.remove("d-none");
@@ -358,16 +383,20 @@ function expel(){
         if(studentData.prefect){
             prefect();
         }
+        if(studentData.inquisitorialSquad){
+            squad();
+        }
         expelledStudents.push(studentData);
         allStudents.splice(allStudents.indexOf(studentData), 1);
         modalExpelStyle();
-        filterSearchHouse();
+        filterSearchOptions();
     }
 }
 
 function modalExpelStyle(){
     HTML.expelBtn.classList.add("d-none");
     HTML.prefectBtn.classList.add("d-none");
+    HTML.squadBtn.classList.add("d-none");
     HTML.modalexpelHeading.classList.remove("d-none");
 }
 
@@ -385,22 +414,44 @@ function prefect(){
     }else{
         studentData.prefect = false;
         if(housePrefects.length === 2 && !housePrefects.find(element => element === studentData)){
-            HTML.prefecttitle.parentElement.dataset.msg = "active";
-            HTML.prefecttitle.textContent = `Too many prefects at ${studentData.house}`;
-            HTML.prefectmsg.textContent = `Revoke ${housePrefects[0].firstName} ${housePrefects[0].lastName} or ${housePrefects[1].firstName} ${housePrefects[1].lastName} 
+            HTML.errortitle.parentElement.dataset.msg = "active";
+            HTML.errortitle.textContent = `Too many prefects at ${studentData.house}`;
+            HTML.errormsg.textContent = `Revoke ${housePrefects[0].firstName} ${housePrefects[0].lastName} or ${housePrefects[1].firstName} ${housePrefects[1].lastName} 
             to make ${studentData.firstName} a prefect`;
         }
     }
-    prefectText(studentData.prefect);
+    text("prefect", studentData.prefect, HTML.modalPrefect, HTML.prefectBtn);
 }
 
-function prefectText(prefect){
-    if(!prefect){
-        HTML.modalPrefect.textContent = "no";
-        HTML.prefectBtn.textContent = "Make prefect";
+// appointing to the inquisitorial squad
+function squad(){
+    const studentData = findStudent(HTML.modalContent.dataset.id);
+    if(!studentData.inquisitorialSquad && (studentData.bloodStatus || studentData.house === "Slytherin")){
+        studentData.inquisitorialSquad = true;
+
+        if(settings.hackedSystem){
+            setTimeout(function(){
+                studentData.inquisitorialSquad = false;
+                text("inquisitorial squad", studentData.inquisitorialSquad, HTML.modalSquad, HTML.squadBtn);
+            }, 1000)
+        }
     }else{
-        HTML.modalPrefect.textContent = "yes";
-        HTML.prefectBtn.textContent = "Revoke prefect";
+        studentData.inquisitorialSquad = false;
+    }
+    text("inquisitorial squad", studentData.inquisitorialSquad, HTML.modalSquad, HTML.squadBtn);
+}
+
+function text(type, value, DOMtext, DOMbtn){
+    if(!value){
+        DOMtext.textContent = "no";
+        if(type === "prefect"){
+            DOMbtn.textContent = `Make ${type}`;
+        }else{
+            DOMbtn.textContent = `Join ${type}`;
+        }
+    }else{
+        DOMtext.textContent = "yes";
+        DOMbtn.textContent = `Revoke ${type}`;
     }
 }
 
@@ -412,9 +463,19 @@ function hackTheSystem(){
         const mySelf = Object.create( Student );
         mySelf.firstName = "MTthought";
         mySelf.house = "Gryffindor";
-        mySelf.bloodStatus = "half";
         mySelf.cannotBeExpelled = true;
         allStudents.push( mySelf );
-        filterSearchHouse();
+        randBlood();
+        filterSearchOptions();
     }
+}
+
+function randBlood(){
+    allStudents.forEach(student =>{
+        if(Math.round(Math.random())){
+            student.bloodStatus = true;
+        }else{
+            student.bloodStatus = false;
+        }
+    })
 }
