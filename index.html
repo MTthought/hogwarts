@@ -8,29 +8,11 @@
     <title>Hogwarts 1991</title>
 </head>
 <body>
-  <h1>Hogwarts 1991</h1>
-
-  <label for="houseFilter">Filter by:</label>
-  <select id="houseFilter" data-action="filter">
-    <option value="*">All</option>
-    <option value="gryffindor">Gryffindor</option>
-    <option value="hufflepuff">Hufflepuff</option>
-    <option value="ravenclaw">Ravenclaw</option>
-    <option value="slytherin">Slytherin</option>
-    <option value="expelled">Expelled</option>
-    <option value="nonExpelled">Non-expelled</option>
-  </select>
-  
-  <label for="nameSorting">Sort by:</label>
-  <select id="nameSorting" data-action="sort">
-    <option value="unsorted">--</option>
-    <option value="firstName">First name</option>
-    <option value="lastName">Last name</option>
-  </select>
-
-  <label for="search">Search:</label>
-  <input id="search" type="text" placeholder="name or surname">
-
+  <div class="mb">
+    <img src="img/Hogwarts_Shield.svg" alt="hogwarts" class="logo">
+    <h1 class="logo">Hogwarts 1991</h1>
+  </div>
+<div class="container bar">
   <div class="studentNumbers">
     Gryffindor: <span></span> 
     Hufflepuff: <span></span> 
@@ -39,6 +21,29 @@
     Total: <span></span> Expelled: <span></span> On display: <span></span>
   </div>
   
+  <div>
+    <label for="houseFilter">Filter by:</label>
+    <select id="houseFilter" data-action="filter">
+      <option value="*">All</option>
+      <option value="gryffindor">Gryffindor</option>
+      <option value="hufflepuff">Hufflepuff</option>
+      <option value="ravenclaw">Ravenclaw</option>
+      <option value="slytherin">Slytherin</option>
+      <option value="expelled">Expelled</option>
+      <option value="nonExpelled">Non-expelled</option>
+    </select>
+    
+    <label for="nameSorting">Sort by:</label>
+    <select id="nameSorting" data-action="sort">
+      <option value="unsorted">--</option>
+      <option value="firstName">First name</option>
+      <option value="lastName">Last name</option>
+    </select>
+  
+    <label for="search">Search:</label>
+    <input id="search" type="text" placeholder="name or surname">
+  </div>
+</div>
   <div id="dataList" class="container"></div>
   <h2 class="d-none mt">Expelled students</h2>
   <div id="expelledList" class="container"></div>

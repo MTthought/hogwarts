@@ -6,26 +6,27 @@
 }
 
 [data-house="Hufflepuff"] {
-  --card-color: #e3a000;
-  --secondary-color: #282828;
+  --card-color: #ecb939;
+  --primary-color: #726255;
+  --secondary-color: #372e29;
 }
 
 [data-house="Gryffindor"] {
-  --card-color: #9c1203;
-  --primary-color: #F8F9FA;
-  --secondary-color: #e3a000;
+  --card-color: #740001;
+  --primary-color: #FFFEF2;
+  --secondary-color:#d3a625;
 }
 
 [data-house="Ravenclaw"] {
-  --card-color: #00165e;
-  --primary-color: #F8F9FA;
+  --card-color: #222f5b;
+  --primary-color: #fffdd1;
   --secondary-color: #C09364;
 }
 
 [data-house="Slytherin"] {
-  --card-color: #033807;
-  --primary-color: #F8F9FA;
-  --secondary-color: #CDCDCD;
+  --card-color: #1a472a;
+  --primary-color: #fffdd1;
+  --secondary-color: #aaaaaa;
 }
 
 body{
@@ -39,19 +40,22 @@ body{
 }
 
 img.crest {
-  padding: 1em 2em 1em 1em;
+  padding: 1em 0;
   height: 5em;
 }
 
 label, .studentNumbers {
   color: var(--primary-color);
   font-size: small;
-  margin-top: 1em;
 }
 
 .container{
   display: flex;
   flex-wrap: wrap;
+}
+
+.studentNumbers{
+  margin-bottom: 1.5em;
 }
 
 .studentNumbers > span{
@@ -64,6 +68,14 @@ label, .studentNumbers {
 
 h1, h2, .name{
   color: var(--primary-color);
+}
+
+.logo{
+  display: inline;
+  vertical-align: middle;
+}
+img.logo{
+  height: 5em;
 }
 
 .listItem {
@@ -89,6 +101,9 @@ h1, h2, .name{
 
 .mt{
   margin-top: 2em;
+}
+.mb{
+  margin-bottom: 2em;
 }
 
 /* The Modal (background) */
@@ -143,7 +158,14 @@ h1, h2, .name{
 
 @media only screen and (min-width: 1024px) {
   .studentNumbers{
-    float: right;
-    margin-top: .2em;
+    margin: 0.2em 0 0;
+  }
+
+  .bar{
+    justify-content: space-between;
+  }
+  
+  img.crest{
+    padding: 1em 2em 1em 1em;
   }
 }
