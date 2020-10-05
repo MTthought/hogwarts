@@ -1,7 +1,7 @@
 # Hacked Hogwarts Student List
 JavaScript ES6 project (with CSS and HTML). No frameworks or plugins.
 
-## The backstory:
+## The backstory
 You have been hired as the frontender for Hogwarts School of Witchcraft and Wizardry, to build a system to help the administrators handle student lists. As test-data you are given the students from the infamous class of 1991.
 
 First, you are just asked to provide an interface to show the list, sort by firstname, lastname, or house, as well as filter by house. Also the interface must provide a "popup" window with detailed information about each student, including photo and house-crest and colors.
