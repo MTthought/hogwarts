@@ -390,6 +390,9 @@ function expel(){
         allStudents.splice(allStudents.indexOf(studentData), 1);
         modalExpelStyle();
         filterSearchOptions();
+    }else{
+        HTML.errortitle.parentElement.dataset.msg = "active";
+        HTML.errortitle.textContent = `Cannot be expelled!`;
     }
 }
 
