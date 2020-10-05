@@ -1,6 +1,7 @@
 "use strict";
 window.addEventListener("DOMContentLoaded", init);
 
+// global variables
 let allStudents = [];
 let expelledStudents = [];
 const HTML = {};
@@ -10,6 +11,7 @@ const settings = {
     search: "",
     hackedSystem: false
 }
+
 // the prototype for all students
 const Student = {
     firstName: "",
@@ -24,6 +26,7 @@ const Student = {
     cannotBeExpelled: false
 }
 
+// DOM elements and event listeners
 function init(){
     HTML.studentTemplate = document.querySelector(".templates");
     HTML.search = document.querySelector("#search");
@@ -57,6 +60,7 @@ function init(){
     getData();
 }
 
+// async and await enable asynchronous behavior without having to explicitly configure promise chains
 async function getData(){
     const studresponse = await fetch("https://petlatkea.dk/2020/hogwarts/students.json");
     const students = await studresponse.json();
