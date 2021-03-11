@@ -99,11 +99,11 @@ h1, h2, .name{
   display: inline;
   vertical-align: middle;
 }
-img.logo{
-  height: 5em;
-}
 h1.logo{
   margin-left: .3em;
+}
+img.logo{
+  height: 5em;
 }
 
 .listItem {
@@ -135,10 +135,6 @@ h1.logo{
   background: linear-gradient(180deg,rgba(16,20,27,.8) 50%,rgba(16,20,27,0));
   position: fixed;
   width: 100%;
-}
-
-.bar{
-  margin-top: 8em;
 }
 
 /* The Modal (background) */
@@ -192,18 +188,8 @@ h1.logo{
   background-image: linear-gradient(to bottom, var(--secondary-color) 0%, var(--title-color) 100%);
 }
 
-@media only screen and (min-width: 1024px) {
-  .studentNumbers{
-    margin: 0.2em 0 0;
-  }
-
-  .bar{
-    justify-content: space-between;
-  }
-  
-  img.crest{
-    padding: 1em 2em 1em 1em;
-  }
+.bar{
+  margin-top: 8em;
 }
 
 .space{
@@ -272,5 +258,34 @@ h1.logo{
   }
   100% {
     opacity: 0.3;
+  }
+}
+
+/* small phone screens */
+@media only screen and (max-width: 320px) {
+  .logo{
+    display: block;
+  }
+  h1.logo{
+    margin-left: 0;
+  }
+
+  .bar{
+    margin-top: 12em;
+  }
+}
+
+/* desktop */
+@media only screen and (min-width: 1024px) {
+  .studentNumbers{
+    margin: 0.2em 0 0;
+  }
+
+  .bar{
+    justify-content: space-between;
+  }
+  
+  img.crest{
+    padding: 1em 2em 1em 1em;
   }
 }
