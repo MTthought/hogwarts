@@ -35,8 +35,8 @@ function init(){
     HTML.expelledList = document.querySelector("#expelledList");
     HTML.modal = document.getElementById("myModal");
     HTML.modalContent = document.querySelector(".modal-content");
-    HTML.pic = document.querySelector(".container > div > img");
-    HTML.crest = document.querySelector(".container > img");
+    HTML.pic = document.querySelector(".flex > div > img");
+    HTML.crest = document.querySelector(".flex > img");
     HTML.modalFirstName = document.querySelector("#firstName");
     HTML.modalLastName = document.querySelector("#lastName");
     HTML.modalHouse = document.querySelector("#house");
@@ -53,7 +53,7 @@ function init(){
     HTML.squadBtn = document.querySelector("button:nth-of-type(3)");
     HTML.unsorted = document.querySelector("#nameSorting > option:nth-child(1)");
     HTML.options = document.querySelectorAll("select");
-    HTML.expelHeading = document.querySelector("body > h2");
+    HTML.expelHeading = document.querySelector(".py > h2");
 
     HTML.options.forEach(option => option.addEventListener("change", setOptions));
     HTML.search.addEventListener("keyup", setSearch);

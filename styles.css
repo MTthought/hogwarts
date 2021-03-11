@@ -1,38 +1,63 @@
 :root{
-  --primary-color: #2d004d;
-  --secondary-color: #888;
-  --card-color: #F8F9FA;
-  --black-w-opacity: rgba(0,0,0,0.4);
+  --primary-color: #20011e;
+  --secondary-color: rgba(250,250,250,0.4);
+  --title-color: #FFFEF2;
+  --dark-w-opacity: rgba(36, 21, 47,0.4);
+  --border-radius: 16px;
 }
 
 [data-house="Hufflepuff"] {
-  --card-color: #ecb939;
-  --primary-color: #726255;
+  --primary-color: #FCB542;
   --secondary-color: #372e29;
+  --title-color: #726255;
 }
 
 [data-house="Gryffindor"] {
-  --card-color: #740001;
-  --primary-color: #FFFEF2;
+  --primary-color: #591E1C;
   --secondary-color:#d3a625;
 }
 
 [data-house="Ravenclaw"] {
-  --card-color: #222f5b;
-  --primary-color: #fffdd1;
+  --primary-color: #222f5b;
   --secondary-color: #C09364;
+  --title-color: #fffdd1;
 }
 
 [data-house="Slytherin"] {
-  --card-color: #1a472a;
-  --primary-color: #fffdd1;
+  --primary-color: #1a472a;
   --secondary-color: #aaaaaa;
+  --title-color: #fffdd1;
 }
 
 body{
-  margin: 2em;
+  margin: 0;
   box-sizing: border-box;
   font-family: sans-serif;
+  background: linear-gradient(135deg, #24152F, #10141b);
+  min-height: 100vh;
+}
+
+select, input{
+  color: var(--title-color);
+  background-color: var(--secondary-color);
+  border-radius: 3px;
+  border: none;
+}
+select:focus, input:focus{
+  outline: none;
+  box-shadow: 0 0 3pt 1pt var(--title-color);
+}
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: var(--title-color);
+  opacity: 1; /* Firefox */
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color: var(--title-color);
+}
+
+::-ms-input-placeholder { /* Microsoft Edge */
+  color: var(--title-color);
 }
 
 .col{
@@ -45,11 +70,11 @@ img.crest {
 }
 
 label, .studentNumbers {
-  color: var(--primary-color);
+  color: var(--title-color);
   font-size: small;
 }
 
-.container{
+.flex{
   display: flex;
   flex-wrap: wrap;
 }
@@ -67,7 +92,7 @@ label, .studentNumbers {
 }
 
 h1, h2, .name{
-  color: var(--primary-color);
+  color: var(--title-color);
 }
 
 .logo{
@@ -77,16 +102,19 @@ h1, h2, .name{
 img.logo{
   height: 5em;
 }
+h1.logo{
+  margin-left: .3em;
+}
 
 .listItem {
   padding: 1em;
   margin: .5em;
-  background-color: var(--card-color);
+  background-color: rgba(250,250,250,0.1);
+  border-radius: var(--border-radius);
 }
 
 .listItem:hover{
-  --card-color: #2d004d;
-  --primary-color: #F8F9FA;
+  background-color: var(--primary-color);
   cursor: pointer;
 }
 
@@ -99,11 +127,18 @@ img.logo{
   display: none;
 }
 
-.mt{
-  margin-top: 2em;
+.py{
+  padding: 2em;
 }
-.mb{
-  margin-bottom: 2em;
+
+.title{
+  background: linear-gradient(180deg,rgba(16,20,27,.8) 50%,rgba(16,20,27,0));
+  position: fixed;
+  width: 100%;
+}
+
+.bar{
+  margin-top: 8em;
 }
 
 /* The Modal (background) */
@@ -116,16 +151,17 @@ img.logo{
   width: 100%; /* Full width */
   height: 100%; /* Full height */
   overflow: auto; /* Enable scroll if needed */
-  background-color: var(--black-w-opacity, rgb(0,0,0)); /* var + fallback color */
+  background-color: var(--dark-w-opacity, rgb(0,0,0)); /* var + fallback color */
 }
 
 /* Modal Content */
 .modal-content {
-  background-color: var(--card-color);
+  background-color: var(--primary-color);
   margin: auto;
   padding: 20px;
-  border: 1px solid var(--secondary-color);
+  /* border: 1px solid var(--secondary-color); */
   width: 80%;
+  border-radius: var(--border-radius);
 }
 
 /* The Close Button */
@@ -137,7 +173,7 @@ img.logo{
 }
 .close:hover,
 .close:focus {
-  color: var(--primary-color);
+  color: var(--title-color);
   text-decoration: none;
   cursor: pointer;
 }
@@ -146,14 +182,14 @@ img.logo{
   margin-top: 1em;
   padding: .6em 1.8em;
   font-weight: 700;
-  color: var(--card-color);
+  color: var(--primary-color);
   border: 1px solid var(--secondary-color);
-  border-radius: 5px;
-  background-image: linear-gradient(to bottom, var(--primary-color) 0%, var(--secondary-color) 100%);
+  border-radius: var(--border-radius);
+  background-image: linear-gradient(to bottom, var(--title-color) 0%, var(--secondary-color) 100%);
   cursor: pointer;
 }
 .btn:hover{
-  background-image: linear-gradient(to bottom, var(--secondary-color) 0%, var(--primary-color) 100%);
+  background-image: linear-gradient(to bottom, var(--secondary-color) 0%, var(--title-color) 100%);
 }
 
 @media only screen and (min-width: 1024px) {
@@ -167,5 +203,74 @@ img.logo{
   
   img.crest{
     padding: 1em 2em 1em 1em;
+  }
+}
+
+.space{
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    top: 0;
+    left: 0;
+}
+/* taken from https://codepen.io/codecomposer/pen/PzPvod */
+.stars {
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.stars {
+  background-image: 
+    radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 130px 80px, #fff, rgba(0,0,0,0)),
+    radial-gradient(2px 2px at 160px 120px, #ddd, rgba(0,0,0,0));
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  animation: twinkle 8s infinite;
+  opacity: 0;
+}
+
+.stars:nth-child(1) {
+  background-position: 50% 50%;
+  animation-delay: 0s;
+  transform: rotate(200deg) scale(0.6);
+}
+.stars:nth-child(2) {
+  background-position: 20% 60%;
+  animation-delay: -1s;
+  transform: rotate(80deg);
+}
+.stars:nth-child(3) {
+  background-position: -20% -30%;
+  animation-delay: -2s;
+  transform: rotate(200deg) scale(1.4);
+}
+.stars:nth-child(4) {
+  background-position: 40% -80%;
+  animation-delay: -3s;
+}
+.stars:nth-child(5) {
+  background-position: -20% 30%;
+  animation-delay: -4s;
+}
+
+@keyframes twinkle {
+  0% {
+    opacity: 0.3;
+    animation-timing-function: ease-in;
+  } 
+  85% {
+    opacity: 1;
+    animation-timing-function: linear;
+  }
+  100% {
+    opacity: 0.3;
   }
 }

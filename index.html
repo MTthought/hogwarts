@@ -8,46 +8,57 @@
     <title>Hogwarts 1991</title>
 </head>
 <body>
-  <div class="mb">
-    <img src="img/hogwarts_shield.svg" alt="hogwarts" class="logo">
+  <div class="space">
+    <div class="stars"></div>
+    <div class="stars"></div>
+    <div class="stars"></div>
+    <div class="stars"></div>
+    <div class="stars"></div>
+  </div>
+
+  <div style="position: relative;">
+  <div class="title py">
+    <img src="img/hogwarts_crest.svg" alt="hogwarts" class="logo">
     <h1 class="logo">Hogwarts 1991</h1>
   </div>
-<div class="container bar">
-  <div class="studentNumbers">
-    Gryffindor: <span></span> 
-    Hufflepuff: <span></span> 
-    Ravenclaw: <span></span> 
-    Slytherin: <span></span> 
-    Total: <span></span> Expelled: <span></span> On display: <span></span>
-  </div>
-  
-  <div>
-    <label for="houseFilter">Filter by:</label>
-    <select id="houseFilter" data-action="filter">
-      <option value="*">All</option>
-      <option value="gryffindor">Gryffindor</option>
-      <option value="hufflepuff">Hufflepuff</option>
-      <option value="ravenclaw">Ravenclaw</option>
-      <option value="slytherin">Slytherin</option>
-      <option value="expelled">Expelled</option>
-      <option value="nonExpelled">Non-expelled</option>
-    </select>
-    
-    <label for="nameSorting">Sort by:</label>
-    <select id="nameSorting" data-action="sort">
-      <option value="unsorted">--</option>
-      <option value="firstName">First name</option>
-      <option value="lastName">Last name</option>
-    </select>
-  
-    <label for="search">Search:</label>
-    <input id="search" type="text" placeholder="name or surname">
+  <div class="py">
+    <div class="flex bar">
+      <div class="studentNumbers">
+        Gryffindor: <span></span> 
+        Hufflepuff: <span></span> 
+        Ravenclaw: <span></span> 
+        Slytherin: <span></span> 
+        Total: <span></span> Expelled: <span></span> On display: <span></span>
+      </div>
+      
+      <div>
+        <label for="houseFilter">Filter by:</label>
+        <select id="houseFilter" data-action="filter">
+          <option value="*">All</option>
+          <option value="gryffindor">Gryffindor</option>
+          <option value="hufflepuff">Hufflepuff</option>
+          <option value="ravenclaw">Ravenclaw</option>
+          <option value="slytherin">Slytherin</option>
+          <option value="expelled">Expelled</option>
+          <option value="nonExpelled">Non-expelled</option>
+        </select>
+        
+        <label for="nameSorting">Sort by:</label>
+        <select id="nameSorting" data-action="sort">
+          <option value="unsorted">--</option>
+          <option value="firstName">First name</option>
+          <option value="lastName">Last name</option>
+        </select>
+      
+        <label for="search">Search:</label>
+        <input id="search" type="text" placeholder="Name or surname">
+      </div>
+    </div>
+    <div id="dataList" class="flex"></div>
+    <h2 class="d-none mt">Expelled students</h2>
+    <div id="expelledList" class="flex"></div>
   </div>
 </div>
-  <div id="dataList" class="container"></div>
-  <h2 class="d-none mt">Expelled students</h2>
-  <div id="expelledList" class="container"></div>
-  
   <template class="templates">
     <div class="listItem" data-id="">
         <div class="name"></div>
@@ -61,7 +72,7 @@
     <!-- Modal content -->
     <div class="modal-content" data-house="" data-id="">
       <span class="close">&times;</span>
-      <div class="container">
+      <div class="flex">
         <img src="" alt="" class="crest">
         <div class="col">
             <img src="" alt="">
