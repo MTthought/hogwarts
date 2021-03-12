@@ -72,6 +72,8 @@ img.crest {
 label, .studentNumbers {
   color: var(--title-color);
   font-size: small;
+  display: block;
+  margin-top: .5em;
 }
 
 .flex{
@@ -263,15 +265,31 @@ img.logo{
 
 /* small phone screens */
 @media only screen and (max-width: 320px) {
-  .logo{
-    display: block;
+  .py{
+    padding: 1em;
   }
+
   h1.logo{
-    margin-left: 0;
+    margin-left: .2em;
+  }
+  img.logo{
+    height: 4em;
   }
 
   .bar{
-    margin-top: 12em;
+    margin-top: 6em;
+  }
+}
+
+/* tablet */
+@media only screen and (min-width: 768px) {
+  label{
+    display: initial;
+    margin-top: .5em;
+  }
+  
+  img.crest{
+    padding: 1em 2em 1em 1em;
   }
 }
 
@@ -284,8 +302,8 @@ img.logo{
   .bar{
     justify-content: space-between;
   }
-  
-  img.crest{
-    padding: 1em 2em 1em 1em;
+
+  .modal-content{
+    max-width: 50em;
   }
 }
