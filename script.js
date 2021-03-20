@@ -35,8 +35,8 @@ function init(){
     HTML.expelledList = document.querySelector("#expelledList");
     HTML.modal = document.getElementById("myModal");
     HTML.modalContent = document.querySelector(".modal-content");
-    HTML.pic = document.querySelector(".flex > div > img");
-    HTML.crest = document.querySelector(".flex > img");
+    HTML.pic = document.querySelector(".modal-content > div > img");
+    HTML.crest = document.querySelector(".modal-content > img");
     HTML.modalFirstName = document.querySelector("#firstName");
     HTML.modalLastName = document.querySelector("#lastName");
     HTML.modalHouse = document.querySelector("#house");
@@ -48,9 +48,9 @@ function init(){
     HTML.modalexpelHeading = HTML.modalContent.querySelector("h3");
     HTML.errortitle = HTML.modalContent.querySelector("p");
     HTML.errormsg = HTML.modalContent.querySelector("p:nth-of-type(2)");
-    HTML.expelBtn = document.querySelector("button");
-    HTML.prefectBtn = document.querySelector("button:nth-of-type(2)");
-    HTML.squadBtn = document.querySelector("button:nth-of-type(3)");
+    HTML.expelBtn = document.querySelector(".btn");
+    HTML.prefectBtn = document.querySelector(".btn:nth-of-type(2)");
+    HTML.squadBtn = document.querySelector(".btn:nth-of-type(3)");
     HTML.unsorted = document.querySelector("#nameSorting > option:nth-child(1)");
     HTML.options = document.querySelectorAll("select");
     HTML.expelHeading = document.querySelector(".py > h2");
@@ -422,7 +422,7 @@ function prefect(){
         studentData.prefect = false;
         if(housePrefects.length === 2 && !housePrefects.find(element => element === studentData)){
             HTML.errortitle.parentElement.dataset.msg = "active";
-            HTML.errortitle.textContent = `Too many prefects at ${studentData.house}`;
+            HTML.errortitle.textContent = `${studentData.firstName} couldn't become a prefect!`;
             HTML.errormsg.textContent = `Revoke ${housePrefects[0].firstName} ${housePrefects[0].lastName} or ${housePrefects[1].firstName} ${housePrefects[1].lastName} 
             to make ${studentData.firstName} a prefect`;
         }

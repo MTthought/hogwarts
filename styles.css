@@ -60,20 +60,16 @@ select:focus, input:focus{
   color: var(--title-color);
 }
 
-.col{
-  padding: 0 1em;
-}
-
 img.crest {
-  padding: 1em 0;
-  height: 5em;
+  height: 5rem;
+  margin: 1rem 1rem 0 1rem;
 }
 
 label, .studentNumbers {
   color: var(--title-color);
   font-size: small;
   display: block;
-  margin-top: .5em;
+  margin-top: .5rem;
 }
 
 .flex{
@@ -82,7 +78,7 @@ label, .studentNumbers {
 }
 
 .studentNumbers{
-  margin-bottom: 1.5em;
+  margin-bottom: 1.5rem;
 }
 
 .studentNumbers > span{
@@ -90,7 +86,7 @@ label, .studentNumbers {
 }
 
 #dataList, #expelledList{
-  margin: 1em -.5em;
+  margin: 1rem -.5rem;
 }
 
 h1, h2, .name{
@@ -102,15 +98,24 @@ h1, h2, .name{
   vertical-align: middle;
 }
 h1.logo{
-  margin-left: .3em;
+  margin-left: .3rem;
 }
 img.logo{
-  height: 5em;
+  height: 5rem;
+}
+
+.grid{
+  display: grid;
+  grid-gap: 1rem;
+}
+
+.list{
+  grid-template-columns: repeat(2, 1fr);
+  grid-auto-rows: 5.2rem; /* sets a size for the rows with the size not set */
 }
 
 .listItem {
-  padding: 1em;
-  margin: .5em;
+  padding: 1rem;
   background-color: rgba(250,250,250,0.1);
   border-radius: var(--border-radius);
 }
@@ -130,7 +135,7 @@ img.logo{
 }
 
 .py{
-  padding: 2em;
+  padding: 2rem;
 }
 
 .title{
@@ -143,7 +148,7 @@ img.logo{
 .modal {
   position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */
-  padding-top: 100px; /* Location of the box */
+  padding-top: 2rem; /* Location of the box */
   left: 0;
   top: 0;
   width: 100%; /* Full width */
@@ -154,10 +159,13 @@ img.logo{
 
 /* Modal Content */
 .modal-content {
+  grid-gap: 2rem;
+  grid-template-rows: repeat(3, auto);
+  grid-auto-flow: column; /* auto-placed items get inserted into new column */
+  grid-template-columns: 1fr auto; /* fr fills up the remaining space, auto addaps to content size */
   background-color: var(--primary-color);
   margin: auto;
-  padding: 20px;
-  /* border: 1px solid var(--secondary-color); */
+  padding: 1rem;
   width: 80%;
   border-radius: var(--border-radius);
 }
@@ -165,9 +173,9 @@ img.logo{
 /* The Close Button */
 .close {
   color: var(--secondary-color);
-  float: right;
   font-size: 28px;
   font-weight: bold;
+  margin-top: -10px;
 }
 .close:hover,
 .close:focus {
@@ -177,11 +185,13 @@ img.logo{
 }
 
 .btn{
-  margin-top: 1em;
-  padding: .6em 1.8em;
+  width: fit-content;
+  margin-bottom: .6rem;
+  padding: .6rem 1.8rem;
   font-weight: 700;
+  font-size: .8rem;
   color: var(--primary-color);
-  border: 1px solid var(--secondary-color);
+  border: none;
   border-radius: var(--border-radius);
   background-image: linear-gradient(to bottom, var(--title-color) 0%, var(--secondary-color) 100%);
   cursor: pointer;
@@ -191,7 +201,7 @@ img.logo{
 }
 
 .bar{
-  margin-top: 8em;
+  margin-top: 8rem;
 }
 
 .space{
@@ -266,44 +276,59 @@ img.logo{
 /* small phone screens */
 @media only screen and (max-width: 320px) {
   .py{
-    padding: 1em;
+    padding: 1rem;
+  }
+
+  .modal{
+    padding-top: 1rem;
   }
 
   h1.logo{
-    margin-left: .2em;
+    margin-left: .2rem;
   }
   img.logo{
-    height: 4em;
+    height: 4rem;
   }
 
   .bar{
-    margin-top: 6em;
+    margin-top: 6rem;
   }
 }
 
 /* tablet */
 @media only screen and (min-width: 768px) {
+  .list{
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: max-content;
+  }
+
   label{
     display: initial;
-    margin-top: .5em;
+    margin-top: .5rem;
   }
-  
-  img.crest{
-    padding: 1em 2em 1em 1em;
+
+  .modal{
+    padding-top: 100px;
+  }
+
+  .modal-content{
+    grid-template-columns: repeat(2, auto) 1fr auto;
+    grid-template-rows: auto;
+    max-width: 44rem;
   }
 }
 
 /* desktop */
 @media only screen and (min-width: 1024px) {
+  .list{
+    grid-template-columns: repeat(6, 1fr);
+  }
+
   .studentNumbers{
-    margin: 0.2em 0 0;
+    margin: 0.2rem 0 0;
   }
 
   .bar{
     justify-content: space-between;
-  }
-
-  .modal-content{
-    max-width: 50em;
   }
 }
