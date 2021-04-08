@@ -35,8 +35,8 @@ function init(){
     HTML.expelledList = document.querySelector("#expelledList");
     HTML.modal = document.getElementById("myModal");
     HTML.modalContent = document.querySelector(".modal-content");
-    HTML.pic = document.querySelector(".modal-content > div > img");
-    HTML.crest = document.querySelector(".modal-content > img");
+    HTML.pic = document.querySelector("img.pic");
+    HTML.crest = document.querySelector("img.crest");
     HTML.modalFirstName = document.querySelector("#firstName");
     HTML.modalLastName = document.querySelector("#lastName");
     HTML.modalHouse = document.querySelector("#house");
@@ -46,14 +46,15 @@ function init(){
     HTML.modalPrefect = document.querySelector("#prefect");
     HTML.modalSquad = document.querySelector("#inquisitorialSquad");
     HTML.modalexpelHeading = HTML.modalContent.querySelector("h3");
-    HTML.errortitle = HTML.modalContent.querySelector("p");
-    HTML.errormsg = HTML.modalContent.querySelector("p:nth-of-type(2)");
-    HTML.expelBtn = document.querySelector(".btn");
-    HTML.prefectBtn = document.querySelector(".btn:nth-of-type(2)");
-    HTML.squadBtn = document.querySelector(".btn:nth-of-type(3)");
+    HTML.error = HTML.modalContent.querySelector("[data-msg]");
+    HTML.errortitle = HTML.error.querySelector("p");
+    HTML.errormsg = HTML.error.querySelector("p:nth-of-type(2)");
+    HTML.expelBtn = document.querySelector(".expel");
+    HTML.prefectBtn = document.querySelector(".prefect");
+    HTML.squadBtn = document.querySelector(".squad");
     HTML.unsorted = document.querySelector("#nameSorting > option:nth-child(1)");
     HTML.options = document.querySelectorAll("select");
-    HTML.expelHeading = document.querySelector(".py > h2");
+    HTML.expelHeading = document.querySelector(".pa > h2");
 
     HTML.options.forEach(option => option.addEventListener("change", setOptions));
     HTML.search.addEventListener("keyup", setSearch);
@@ -306,6 +307,13 @@ function findStudent(id){
     }
 }
 
+function clearError(){
+    HTML.errortitle.textContent = "";
+    HTML.errormsg.textContent = "";
+    HTML.error.dataset.msg = "inactive";
+    HTML.error.classList.add("d-none");
+}
+
 // modal start - taken from https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_modal
 const span = document.getElementsByClassName("close")[0];
 
@@ -360,10 +368,8 @@ function popup(){
         HTML.modalexpelHeading.classList.add("d-none");
     }
 
-    if(HTML.errortitle.parentElement.dataset.msg === "active"){
-        HTML.errortitle.textContent = "";
-        HTML.errormsg.textContent = "";
-        HTML.errortitle.parentElement.dataset.msg = "inactive";
+    if(HTML.error.dataset.msg === "active"){
+        clearError();
     }
 
     HTML.modal.classList.remove("d-none");
@@ -395,8 +401,9 @@ function expel(){
         modalExpelStyle();
         filterSearchOptions();
     }else{
-        HTML.errortitle.parentElement.dataset.msg = "active";
+        HTML.error.dataset.msg = "active";
         HTML.errortitle.textContent = `Cannot be expelled!`;
+        HTML.error.classList.remove("d-none");
     }
 }
 
@@ -404,6 +411,9 @@ function modalExpelStyle(){
     HTML.expelBtn.classList.add("d-none");
     HTML.prefectBtn.classList.add("d-none");
     HTML.squadBtn.classList.add("d-none");
+    if(HTML.error.dataset.msg === "active"){
+        clearError();
+    }
     HTML.modalexpelHeading.classList.remove("d-none");
 }
 
@@ -421,10 +431,11 @@ function prefect(){
     }else{
         studentData.prefect = false;
         if(housePrefects.length === 2 && !housePrefects.find(element => element === studentData)){
-            HTML.errortitle.parentElement.dataset.msg = "active";
-            HTML.errortitle.textContent = `${studentData.firstName} couldn't become a prefect!`;
+            HTML.error.dataset.msg = "active";
+            HTML.errortitle.textContent = `${studentData.firstName} didn't become a prefect!`;
             HTML.errormsg.textContent = `Revoke ${housePrefects[0].firstName} ${housePrefects[0].lastName} or ${housePrefects[1].firstName} ${housePrefects[1].lastName} 
             to make ${studentData.firstName} a prefect`;
+            HTML.error.classList.remove("d-none");
         }
     }
     text("prefect", studentData.prefect, HTML.modalPrefect, HTML.prefectBtn);

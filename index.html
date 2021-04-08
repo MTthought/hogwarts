@@ -17,11 +17,11 @@
   </div>
 
   <div style="position: relative;">
-  <div class="title py">
+  <div class="title pa">
     <img src="img/Hogwarts_Crest.svg" alt="hogwarts" class="logo">
     <h1 class="logo">Hogwarts 1991</h1>
   </div>
-  <div class="py">
+  <div class="pa">
     <div class="flex bar">
       <div class="studentNumbers">
         Gryffindor: <span></span> 
@@ -71,29 +71,40 @@
 
     <!-- Modal content -->
     <div class="modal-content grid" data-house="" data-id="">
-      <img src="" alt="" class="crest">
-      <div>
-          <img src="" alt="">
-          <div><span class="house">First name: </span><span class="name" id="firstName"></span></div>
-          <div><span class="house">Middle name: </span><span class="name" id="middleName"></span></div>
-          <div><span class="house">Last name: </span><span class="name" id="lastName"></span></div>
-          <div><span class="house">Nick name: </span><span class="name" id="nickName"></span></div>
-          <div><span class="house">House: </span><span class="name" id="house"></span></div>
-          <div><span class="house">Blood-status: </span><span class="name" id="bloodStatus"></span></div>
-          <div><span class="house">Prefect: </span><span class="name" id="prefect"></span></div>
-          <div><span class="house">Inquisitorial squad: </span><span class="name" id="inquisitorialSquad">no</span></div>
+      <span class="close">&times;</span>
+      <img src="" alt="" class="crest center-content">
+
+      <div class="divider grid-full-width md-d-none"></div>
+      
+      <img src="" alt="" class="pic grid-2-3">
+      <div class="grid-3-4">
+        <div class="pb"><p class="house">First name: </p><p class="name" id="firstName"></p></div>
+        <div class="pb"><p class="house">Nick name: </p><p class="name" id="nickName"></p></div>
+        <div class="pb"><p class="house">Middle name: </p><p class="name" id="middleName"></p></div>
+        <div><p class="house">Last name: </p><p class="name" id="lastName"></p></div>
       </div>
-      <div>
-        <h3 class="name d-none">Expelled</h3>
-        <div class="btn">Expel</div>
-        <div class="btn"></div>
-        <div class="btn"></div>
-        <div data-msg="inactive">
-          <p class="name"></p>
+
+      <div class="divider grid-full-width md-2-4"></div>
+      
+      <div class="grid-2-3">
+        <div class="pb"><p class="house">House: </p><p class="name" id="house"></p></div>
+        <div class="pb"><p class="house">Prefect: </p><p class="name" id="prefect"></p></div>
+      </div>
+      <div class="grid-3-4">
+        <div class="pb"><p class="house">Blood-status: </p><p class="name" id="bloodStatus"></p></div>
+        <div class="pb"><p class="house">Inquisitorial squad: </p><p class="name" id="inquisitorialSquad">no</p></div>
+      </div>
+      
+      <div class="grid-2-4">
+        <h3 class="name center-content pb d-none">Expelled</h3>
+        <div class="btn mb expel">Expel</div>
+        <div class="btn mb prefect"></div>
+        <div data-msg="inactive" class="mb d-none">
+          <p class="name pb"></p>
           <p class="house"></p>
         </div>
+        <div class="btn mb squad"></div>
       </div>
-      <span class="close">&times;</span>
     </div>
 
   </div>

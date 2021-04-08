@@ -37,6 +37,10 @@ body{
   min-height: 100vh;
 }
 
+p{
+  margin: 0;
+}
+
 select, input{
   color: var(--title-color);
   background-color: var(--secondary-color);
@@ -58,11 +62,6 @@ select:focus, input:focus{
 
 ::-ms-input-placeholder { /* Microsoft Edge */
   color: var(--title-color);
-}
-
-img.crest {
-  height: 5rem;
-  margin: 1rem 1rem 0 1rem;
 }
 
 label, .studentNumbers {
@@ -134,8 +133,14 @@ img.logo{
   display: none;
 }
 
-.py{
+.pa{
   padding: 2rem;
+}
+.pb{
+  padding-bottom: .5rem;
+}
+.mb{
+  margin-bottom: 1rem;
 }
 
 .title{
@@ -159,10 +164,7 @@ img.logo{
 
 /* Modal Content */
 .modal-content {
-  grid-gap: 2rem;
-  grid-template-rows: repeat(3, auto);
-  grid-auto-flow: column; /* auto-placed items get inserted into new column */
-  grid-template-columns: 1fr auto; /* fr fills up the remaining space, auto addaps to content size */
+  grid-template-columns: 1rem 1fr 1fr 1rem;
   background-color: var(--primary-color);
   margin: auto;
   padding: 1rem;
@@ -170,8 +172,41 @@ img.logo{
   border-radius: var(--border-radius);
 }
 
+.center-content{
+  margin: 0 auto;
+  text-align: center;
+}
+
+.grid-2-3{
+  grid-column: 2 / 3;
+}
+.grid-3-4{
+  grid-column: 3 / 4;
+}
+.grid-2-4{
+  grid-column: 2 / 4;
+}
+.grid-full-width{
+  grid-column: 1 / -1;
+}
+
+img.crest {
+  grid-column: 2 / 4;
+  grid-row: 1 / 2;
+  height: 5rem;
+}
+img.pic{
+  border: 1px solid var(--secondary-color);
+  border-radius: 28px;
+}
+
+.divider{
+  border-bottom: 2px solid var(--secondary-color);
+}
+
 /* The Close Button */
 .close {
+  grid-column-start: 4;
   color: var(--secondary-color);
   font-size: 28px;
   font-weight: bold;
@@ -185,9 +220,8 @@ img.logo{
 }
 
 .btn{
-  width: fit-content;
-  margin-bottom: .6rem;
-  padding: .6rem 1.8rem;
+  padding: .6rem;
+  text-align: center;
   font-weight: 700;
   font-size: .8rem;
   color: var(--primary-color);
@@ -275,12 +309,21 @@ img.logo{
 
 /* small phone screens */
 @media only screen and (max-width: 320px) {
-  .py{
+  .pa{
     padding: 1rem;
   }
 
   .modal{
     padding-top: 1rem;
+  }
+  .grid-2-3{
+    grid-column: 1 / 3;
+  }
+  .grid-3-4{
+    grid-column: 3 / 5;
+  }
+  .grid-2-4{
+    grid-column: 1 / -1;
   }
 
   h1.logo{
@@ -310,11 +353,31 @@ img.logo{
   .modal{
     padding-top: 100px;
   }
-
   .modal-content{
-    grid-template-columns: repeat(2, auto) 1fr auto;
-    grid-template-rows: auto;
+    grid-template-columns: 7rem auto auto 1fr 12rem 1rem; /* fr fills up the remaining space, auto addaps to content size */
     max-width: 44rem;
+  }
+  .close{
+    grid-column-start: 6;
+  }
+  img.crest {
+    grid-column: 1 / 2;
+    grid-row: auto;
+  }
+  .grid-2-4{
+    grid-column: 5 / 6;
+    grid-row: 2 / 5;
+  }
+  .md-2-4{
+    grid-column: 2 / 4;
+  }
+
+  .md-d-none{
+    display: none;
+  }
+
+  .pb{
+    padding-bottom: .8rem;
   }
 }
 
@@ -330,5 +393,9 @@ img.logo{
 
   .bar{
     justify-content: space-between;
+  }
+
+  .modal-content{
+    grid-template-columns: 8rem auto auto 1fr 14rem 1rem;
   }
 }
