@@ -68,7 +68,6 @@ label, .studentNumbers {
   color: var(--title-color);
   font-size: small;
   display: block;
-  margin-top: .5rem;
 }
 
 .flex{
@@ -80,20 +79,17 @@ label, .studentNumbers {
   gap: 1rem;
 }
 
-.studentNumbers{
-  margin-bottom: 1.5rem;
-}
-
 .studentNumbers > span{
   font-weight: 700;
 }
 
-#dataList, #expelledList{
-  margin: 1rem -.5rem;
+h1, h2, .title{
+  color: var(--title-color);
 }
 
-h1, h2, .name{
-  color: var(--title-color);
+.subtitle{
+  font-size: small;
+  color: var(--secondary-color);
 }
 
 .logo{
@@ -112,6 +108,29 @@ img.logo{
   grid-gap: 1rem;
 }
 
+.col-2-3{
+  grid-column: 2 / 3; /* start / end */
+}
+.col-3-4{
+  grid-column: 3 / 4;
+}
+.col-2-4{
+  grid-column: 2 / 4; /* or 2 / span 2 (start at 2 and span 2 cols) or span 2 / 4 (span 2 cols and end at 4) */
+}
+.col-full-width{
+  grid-column: 1 / -1;
+}
+
+.tool-bar{
+  margin-top: 8rem;
+  margin-bottom: 2rem;
+  grid-template-columns: auto 1fr;
+}
+
+#dataList{
+  margin-bottom: 3rem;
+}
+
 .list{
   grid-template-columns: repeat(2, 1fr);
   grid-auto-rows: 5.2rem; /* sets a size for the rows with the size not set */
@@ -122,15 +141,9 @@ img.logo{
   background-color: rgba(250,250,250,0.1);
   border-radius: var(--border-radius);
 }
-
 .listItem:hover{
   background-color: var(--primary-color);
   cursor: pointer;
-}
-
-.house{
-  font-size: small;
-  color: var(--secondary-color);
 }
 
 .d-none{
@@ -144,7 +157,7 @@ img.logo{
   padding-bottom: .5rem;
 }
 
-.title{
+.app-bar{
   background: linear-gradient(180deg,rgba(16,20,27,.8) 50%,rgba(16,20,27,0));
   position: fixed;
   width: 100%;
@@ -174,21 +187,8 @@ img.logo{
 }
 
 .center-content{
-  margin: 0 auto;
+  justify-self: center; /* justify centers on the x axis */
   text-align: center;
-}
-
-.col-2-3{
-  grid-column: 2 / 3;
-}
-.col-3-4{
-  grid-column: 3 / 4;
-}
-.col-2-4{
-  grid-column: 2 / 4;
-}
-.col-full-width{
-  grid-column: 1 / -1;
 }
 
 img.crest {
@@ -233,10 +233,6 @@ img.pic{
 }
 .btn:hover{
   background-image: linear-gradient(to bottom, var(--secondary-color) 0%, var(--title-color) 100%);
-}
-
-.bar{
-  margin-top: 8rem;
 }
 
 .space{
@@ -317,6 +313,7 @@ img.pic{
   .modal{
     padding-top: 1rem;
   }
+
   .col-xs-1-3{
     grid-column: 1 / 3;
   }
@@ -334,7 +331,7 @@ img.pic{
     height: 4rem;
   }
 
-  .bar{
+  .tool-bar{
     margin-top: 6rem;
   }
 }
@@ -348,7 +345,6 @@ img.pic{
 
   label{
     display: initial;
-    margin-top: .5rem;
   }
 
   .modal{
@@ -366,12 +362,20 @@ img.pic{
     grid-column: 1 / 2;
     grid-row: auto;
   }
+
+  .tool-bar{
+    grid-template-columns: auto 1fr auto;
+  }
+
   .col-md-5-6{
     grid-column: 5 / 6;
     grid-row: 2 / 5;
   }
   .col-md-2-4{
     grid-column: 2 / 4;
+  }
+  .col-md-span-1{
+    grid-column: span 1; /* spans across only 1 column */
   }
   .md-d-none{
     display: none;
@@ -384,15 +388,19 @@ img.pic{
     grid-template-columns: repeat(6, 1fr);
   }
 
-  .studentNumbers{
-    margin: 0.2rem 0 0;
-  }
-
-  .bar{
-    justify-content: space-between;
-  }
-
   .modal-content{
     grid-template-columns: 8rem auto auto 1fr 14rem 1rem;
+  }
+
+  .tool-bar{
+    grid-template-columns: 1fr repeat(3, auto);
+    align-items: center; /* align centers on the y axis */
+  }
+  
+  .col-lg-2-3{
+    grid-column-start: 2;
+  }
+  .col-lg-span-1{
+    grid-column: span 1;
   }
 }

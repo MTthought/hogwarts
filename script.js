@@ -28,7 +28,7 @@ const Student = {
 
 // DOM elements and event listeners
 function init(){
-    HTML.studentTemplate = document.querySelector(".templates");
+    HTML.studentTemplate = document.querySelector(".studentTemplate");
     HTML.search = document.querySelector("#search");
     HTML.counter = document.querySelector(".studentNumbers");
     HTML.dataList = document.querySelector("#dataList");
@@ -46,12 +46,12 @@ function init(){
     HTML.modalPrefect = document.querySelector("#prefect");
     HTML.modalSquad = document.querySelector("#inquisitorialSquad");
     HTML.modalexpelHeading = HTML.modalContent.querySelector("h3");
-    HTML.error = HTML.modalContent.querySelector("[data-msg]");
-    HTML.errortitle = HTML.error.querySelector("p");
-    HTML.errormsg = HTML.error.querySelector("p:nth-of-type(2)");
-    HTML.expelBtn = document.querySelector(".expel");
-    HTML.prefectBtn = document.querySelector(".prefect");
-    HTML.squadBtn = document.querySelector(".squad");
+    HTML.expelBtn = HTML.modalContent.querySelector(".expel");
+    HTML.prefectBtn = HTML.modalContent.querySelector(".prefect");
+    HTML.squadBtn = HTML.modalContent.querySelector(".squad");
+    HTML.errorTemplate = document.querySelector(".errorMsgTemplate");
+    HTML.prefectError = HTML.modalContent.querySelector(".prefectError");
+    HTML.expelError = HTML.modalContent.querySelector(".expelError");
     HTML.unsorted = document.querySelector("#nameSorting > option:nth-child(1)");
     HTML.options = document.querySelectorAll("select");
     HTML.expelHeading = document.querySelector(".pa > h2");
@@ -285,8 +285,8 @@ function showStudents(students, inner) {
 
     students.forEach(student => {
         const clone = HTML.studentTemplate.cloneNode(true).content;
-        clone.querySelector(".house").textContent = student.house;
-        clone.querySelector(".name").textContent = `${student.firstName} ${student.lastName}`;
+        clone.querySelector(".subtitle").textContent = student.house;
+        clone.querySelector(".title").textContent = `${student.firstName} ${student.lastName}`;
         clone.querySelector(".listItem").dataset.id = student.firstName;
         inner.appendChild(clone);
     })
@@ -307,11 +307,17 @@ function findStudent(id){
     }
 }
 
-function clearError(){
-    HTML.errortitle.textContent = "";
-    HTML.errormsg.textContent = "";
-    HTML.error.dataset.msg = "inactive";
-    HTML.error.classList.add("d-none");
+function toggleError(error, title, msg){
+    error.innerHTML = "";
+    if(error.classList.contains("d-none")){
+        const clone = HTML.errorTemplate.cloneNode(true).content;
+        clone.querySelector("p").textContent = title;
+        clone.querySelector("p:nth-of-type(2)").textContent = msg;
+        error.appendChild(clone);
+        error.classList.remove("d-none");
+    }else{
+        error.classList.add("d-none");
+    }
 }
 
 // modal start - taken from https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_modal
@@ -368,8 +374,11 @@ function popup(){
         HTML.modalexpelHeading.classList.add("d-none");
     }
 
-    if(HTML.error.dataset.msg === "active"){
-        clearError();
+    if(!HTML.prefectError.classList.contains("d-none")){
+        toggleError(HTML.prefectError);
+    }
+    if(!HTML.expelError.classList.contains("d-none")){
+        toggleError(HTML.expelError);
     }
 
     HTML.modal.classList.remove("d-none");
@@ -401,9 +410,7 @@ function expel(){
         modalExpelStyle();
         filterSearchOptions();
     }else{
-        HTML.error.dataset.msg = "active";
-        HTML.errortitle.textContent = `Cannot be expelled!`;
-        HTML.error.classList.remove("d-none");
+        toggleError(HTML.expelError, 'Cannot be expelled!');
     }
 }
 
@@ -411,8 +418,8 @@ function modalExpelStyle(){
     HTML.expelBtn.classList.add("d-none");
     HTML.prefectBtn.classList.add("d-none");
     HTML.squadBtn.classList.add("d-none");
-    if(HTML.error.dataset.msg === "active"){
-        clearError();
+    if(!HTML.prefectError.classList.contains("d-none")){
+        toggleError(HTML.prefectError);
     }
     HTML.modalexpelHeading.classList.remove("d-none");
 }
@@ -431,11 +438,8 @@ function prefect(){
     }else{
         studentData.prefect = false;
         if(housePrefects.length === 2 && !housePrefects.find(element => element === studentData)){
-            HTML.error.dataset.msg = "active";
-            HTML.errortitle.textContent = `${studentData.firstName} didn't become a prefect!`;
-            HTML.errormsg.textContent = `Revoke ${housePrefects[0].firstName} ${housePrefects[0].lastName} or ${housePrefects[1].firstName} ${housePrefects[1].lastName} 
-            to make ${studentData.firstName} a prefect`;
-            HTML.error.classList.remove("d-none");
+            toggleError(HTML.prefectError, `${studentData.firstName} didn't become a prefect!`, `Revoke ${housePrefects[0].firstName} ${housePrefects[0].lastName} or ${housePrefects[1].firstName} ${housePrefects[1].lastName} 
+            to make ${studentData.firstName} a prefect`);
         }
     }
     text("prefect", studentData.prefect, HTML.modalPrefect, HTML.prefectBtn);
